@@ -1,4 +1,4 @@
-package com.audioviolencedetection.AudioViolenceDetectionApplication.entity;
+package com.audioviolencedetection.api.entity;
 
 import jakarta.persistence.*;
 

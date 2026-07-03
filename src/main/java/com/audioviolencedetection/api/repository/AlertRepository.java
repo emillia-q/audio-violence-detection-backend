@@ -1,6 +1,6 @@
-package com.audioviolencedetection.AudioViolenceDetectionApplication.repository;
+package com.audioviolencedetection.api.repository;
 
-import com.audioviolencedetection.AudioViolenceDetectionApplication.entity.Alert;
+import com.audioviolencedetection.api.entity.Alert;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
