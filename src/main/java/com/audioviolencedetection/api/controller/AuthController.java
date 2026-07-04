@@ -1,9 +1,28 @@
 package com.audioviolencedetection.api.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.audioviolencedetection.api.dto.request.RegisterRequest;
+import com.audioviolencedetection.api.dto.response.AuthResponse;
+import com.audioviolencedetection.api.service.AuthService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/api/v1/auth")
+@RequiredArgsConstructor
 public class AuthController {
+    private final AuthService authService;
+
+    @PostMapping("/register")
+    @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "Registers a new user account in the system")
+    @ApiResponse(responseCode = "201", description = "User successfully registered")
+    @ApiResponse(responseCode = "400", description = "Invalid request data or validation failed")
+    @ApiResponse(responseCode = "409", description = "Email address is already taken")
+    public AuthResponse register(@Valid @RequestBody RegisterRequest request) {
+        return authService.register(request);
+    }
 }
