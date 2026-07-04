@@ -44,7 +44,9 @@ public class JwtService {
                 .compact();
     }
 
-
+    public String extractEmail(String token) {
+        return extractAllClaims(token).getSubject();
+    }
 
     private Claims extractAllClaims(String token) {
         return Jwts.parser()
