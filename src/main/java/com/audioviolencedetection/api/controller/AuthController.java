@@ -1,5 +1,6 @@
 package com.audioviolencedetection.api.controller;
 
+import com.audioviolencedetection.api.dto.request.LoginRequest;
 import com.audioviolencedetection.api.dto.request.RegisterRequest;
 import com.audioviolencedetection.api.dto.response.AuthResponse;
 import com.audioviolencedetection.api.service.AuthService;
@@ -15,6 +16,15 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
+
+    @PostMapping("/login")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponse(responseCode = "200", description = "User successfully logged in")
+    @ApiResponse(responseCode = "400", description = "Invalid request data or validation failed")
+    public AuthResponse login(@RequestBody LoginRequest request) {
+        return authService.login(request);
+    }
+
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
