@@ -1,5 +1,6 @@
 package com.audioviolencedetection.api.service;
 
+import com.audioviolencedetection.api.dto.request.LoginRequest;
 import com.audioviolencedetection.api.dto.request.RegisterRequest;
 import com.audioviolencedetection.api.dto.response.AuthResponse;
 import com.audioviolencedetection.api.entity.User;
@@ -8,6 +9,8 @@ import com.audioviolencedetection.api.security.model.SecurityUser;
 import com.audioviolencedetection.api.security.service.JwtService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +20,21 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final AuthenticationManager authenticationManager;
+
+    public AuthResponse login(LoginRequest request) {
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.email(),
+                        request.password()
+                )
+        );
+
+        User user = userRepository.findByEmail(request.email()).orElseThrow();
+        String token = generateTokenForUser(user);
+
+        return new AuthResponse(token, user.getEmail());
+    }
 
     @Transactional
     public AuthResponse register(RegisterRequest request) {
