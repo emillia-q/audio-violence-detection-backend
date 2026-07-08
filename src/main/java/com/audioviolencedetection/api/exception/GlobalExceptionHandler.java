@@ -33,4 +33,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleBadRequestException(BadRequestException ex) {
         return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
+
+    // 404
+    @ExceptionHandler(ItemNotFoundException.class)
+    public  ResponseEntity<ErrorResponse> handleItemNotFoundException(ItemNotFoundException ex) {
+        return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
 }
