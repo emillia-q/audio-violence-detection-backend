@@ -4,6 +4,7 @@ import com.audioviolencedetection.api.dto.request.LoginRequest;
 import com.audioviolencedetection.api.dto.request.RegisterRequest;
 import com.audioviolencedetection.api.dto.response.AuthResponse;
 import com.audioviolencedetection.api.entity.User;
+import com.audioviolencedetection.api.exception.BadRequestException;
 import com.audioviolencedetection.api.repository.UserRepository;
 import com.audioviolencedetection.api.security.model.SecurityUser;
 import com.audioviolencedetection.api.security.service.JwtService;
@@ -41,7 +42,7 @@ public class AuthService {
         // Check email availability
         String email = request.email();
         if (userRepository.existsByEmail(email))
-            throw new IllegalArgumentException("Email is already taken");
+            throw new BadRequestException("Email is already taken");
 
         User user = createAndSaveUser(request);
 
