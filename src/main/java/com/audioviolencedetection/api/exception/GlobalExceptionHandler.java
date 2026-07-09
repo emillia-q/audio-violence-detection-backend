@@ -2,6 +2,7 @@ package com.audioviolencedetection.api.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -64,5 +65,11 @@ public class GlobalExceptionHandler {
         String msg = "Parameter " + ex.getName() + " should be type " +
                 (ex.getRequiredType() != null ? ex.getRequiredType().getSimpleName() : "correct type");
         return buildResponse(HttpStatus.BAD_REQUEST, msg);
+    }
+
+    // 400, incorrect data format
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponse> handleIncorrectDataFormatException(HttpMessageNotReadableException ex) {
+        return buildResponse(HttpStatus.BAD_REQUEST, "Malformed JSON request body or incorrect data format");
     }
 }
