@@ -46,6 +46,12 @@ public class GlobalExceptionHandler {
         return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
+    // 409
+    @ExceptionHandler(ResourceInUseException.class)
+    public ResponseEntity<ErrorResponse> handleResourceInUseException(ResourceInUseException ex) {
+        return buildResponse(HttpStatus.CONFLICT, ex.getMessage());
+    }
+
     // From Spring
     // 400, DTO field validation
     @ExceptionHandler(MethodArgumentNotValidException.class)
