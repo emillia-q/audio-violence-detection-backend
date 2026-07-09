@@ -1,6 +1,7 @@
 package com.audioviolencedetection.api.controller;
 
 import com.audioviolencedetection.api.dto.request.AddTrustedUserRequest;
+import com.audioviolencedetection.api.security.model.SecurityUser;
 import com.audioviolencedetection.api.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -16,9 +17,9 @@ public class UserController {
     private final UserService userService;
 
     @PatchMapping("/trusted-user")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void setTrustedUser(@Valid @RequestBody AddTrustedUserRequest request,
-                               @AuthenticationPrincipal String currentUserEmail) {
-        userService.setTrustedUser(request, currentUserEmail);
+                               @AuthenticationPrincipal SecurityUser securityUser) {
+        userService.setTrustedUser(request, securityUser.getId());
     }
 }
