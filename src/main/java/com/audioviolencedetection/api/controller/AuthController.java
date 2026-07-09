@@ -21,7 +21,8 @@ public class AuthController {
     @ResponseStatus(HttpStatus.OK)
     @ApiResponse(responseCode = "200", description = "User successfully logged in")
     @ApiResponse(responseCode = "400", description = "Invalid request data or validation failed")
-    public AuthResponse login(@RequestBody LoginRequest request) {
+    @ApiResponse(responseCode = "401", description = "Invalid email or password")
+    public AuthResponse login(@Valid @RequestBody LoginRequest request) {
         return authService.login(request);
     }
 
