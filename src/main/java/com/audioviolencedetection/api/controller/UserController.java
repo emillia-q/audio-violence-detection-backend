@@ -22,7 +22,7 @@ public class UserController {
 
     @PatchMapping("/trusted-user")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Operation(summary = "Set trusted user")
+    @Operation(summary = "Assign a trusted user to the current user profile")
     @ApiResponse(responseCode = "204", description = "Trusted user set")
     @ApiResponse(responseCode = "400", description = "Invalid request data or validation failed")
     @ApiResponse(responseCode = "404", description = "User not found")
