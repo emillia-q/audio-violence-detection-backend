@@ -19,13 +19,13 @@ public class AuthController {
 
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Authenticate user and return JWT token")
     @ApiResponse(responseCode = "200", description = "User successfully logged in")
     @ApiResponse(responseCode = "400", description = "Invalid request data or validation failed")
     @ApiResponse(responseCode = "401", description = "Invalid email or password")
     public AuthResponse login(@Valid @RequestBody LoginRequest request) {
         return authService.login(request);
     }
-
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
