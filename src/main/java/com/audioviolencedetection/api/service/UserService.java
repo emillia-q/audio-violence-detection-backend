@@ -31,4 +31,13 @@ public class UserService {
         currentUser.setTrustedUser(trustedUser);
         userRepository.save(currentUser);
     }
+
+    @Transactional
+    public void deleteTrustedUser(Long currentUserId) {
+        User currentUser = userRepository.findById(currentUserId)
+                .orElseThrow(() -> ItemNotFoundException.createForId(User.class, currentUserId));
+
+        currentUser.setTrustedUser(null);
+        userRepository.save(currentUser);
+    }
 }
