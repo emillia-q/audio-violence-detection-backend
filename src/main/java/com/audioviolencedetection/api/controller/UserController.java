@@ -19,6 +19,6 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public void setTrustedUser(@Valid @RequestBody AddTrustedUserRequest request,
                                @AuthenticationPrincipal String currentUserEmail) {
-
+        userService.setTrustedUser(request, currentUserEmail);
     }
 }
