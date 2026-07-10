@@ -8,6 +8,10 @@ import org.springframework.stereotype.Component;
 public class DeviceMapper {
 
     public DeviceListResponse toDeviceListResponse(Device device) {
-
+        return new DeviceListResponse(
+                device.getId(),
+                device.getMacAddress(),
+                device.getName()
+        );
     }
 }
