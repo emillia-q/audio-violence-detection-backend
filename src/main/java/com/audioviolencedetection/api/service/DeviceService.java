@@ -22,16 +22,12 @@ public class DeviceService {
     private final DeviceMapper deviceMapper;
 
     public List<DeviceListResponse> getUserDevices(Long userId) {
-        User user = userRepository.findById(userId)
+        userRepository.findById(userId)
                 .orElseThrow(() -> ItemNotFoundException.createForId(User.class, userId));
 
-        List<DeviceListResponse> devices = deviceRepository.findAllByUserId(userId)
+        return deviceRepository.findAllByUserId(userId)
                 .stream()
                 .map(deviceMapper::toDeviceListResponse)
                 .toList();
-
-        //if (devices.isEmpty())
-          //  return
-        return devices;
     }
 }
