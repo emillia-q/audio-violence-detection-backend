@@ -7,11 +7,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -25,11 +24,16 @@ public class DeviceController {
     private final DeviceService deviceService;
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Return a list of user devices")
     @ApiResponse(responseCode = "200", description = "Returns a list of all user devices")
-    public List<DeviceListResponse> getUserDevices(@AuthenticationPrincipal SecurityUser securityUser) {
-        return deviceService.getUserDevices(securityUser.getId());
-    }
+    @ApiResponse(responseCode = "204", description = "User has no devices")
+    @ApiResponse(responseCode = "404", description = "User not found")
+    public ResponseEntity<List<DeviceListResponse>> getUserDevices(@AuthenticationPrincipal SecurityUser securityUser) {
+        List<DeviceListResponse> devices = deviceService.getUserDevices(securityUser.getId());
 
+        if (devices.isEmpty())
+            return ResponseEntity.noContent().build();
+
+        return ResponseEntity.ok(devices);
+    }
 }
