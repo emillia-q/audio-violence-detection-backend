@@ -7,6 +7,7 @@ import com.audioviolencedetection.api.dto.response.DeviceListResponse;
 import com.audioviolencedetection.api.entity.Device;
 import com.audioviolencedetection.api.entity.User;
 import com.audioviolencedetection.api.exception.CryptoException;
+import com.audioviolencedetection.api.exception.InvalidDeviceSecretException;
 import com.audioviolencedetection.api.exception.ItemNotFoundException;
 import com.audioviolencedetection.api.exception.ResourceInUseException;
 import com.audioviolencedetection.api.mapper.DeviceMapper;
@@ -55,7 +56,7 @@ public class DeviceService {
         String incomingHash = hashDeviceSecret(request.deviceSecret());
         // Check if device secret is teh same
         if (!incomingHash.equalsIgnoreCase(device.getDeviceSecret()))
-            throw new BadCredentialsException("Invalid device secret");
+            throw new InvalidDeviceSecretException("Invalid device secret");
 
         // Check if device already has a user
         if (device.getUser() != null)

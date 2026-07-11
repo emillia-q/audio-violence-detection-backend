@@ -27,10 +27,16 @@ public class GlobalExceptionHandler {
     }
 
     // Security
-    // 401
+    // 401 - user
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ErrorResponse> handleBadCredentialsException(BadCredentialsException ex) {
         return buildResponse(HttpStatus.UNAUTHORIZED, "Invalid email or password");
+    }
+
+    // 401 - IoT secret
+    @ExceptionHandler(InvalidDeviceSecretException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidDeviceSecretException(InvalidDeviceSecretException ex) {
+        return buildResponse(HttpStatus.UNAUTHORIZED, ex.getMessage());
     }
 
     // Business logic
