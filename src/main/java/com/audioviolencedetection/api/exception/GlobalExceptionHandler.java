@@ -94,6 +94,11 @@ public class GlobalExceptionHandler {
     }
 
     // 500
+    @ExceptionHandler(CryptoException.class)
+    public ResponseEntity<ErrorResponse> handleCryptoException(CryptoException ex) {
+        return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGlobalException(Exception ex) {
         return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred on the server");
