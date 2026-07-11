@@ -9,5 +9,6 @@ import java.util.List;
 @Repository
 public interface DeviceRepository extends JpaRepository<Device, Long> {
 
+    Device findByMacAddress(String macAddress);
     List<Device> findAllByUserId(Long userId);
 }
