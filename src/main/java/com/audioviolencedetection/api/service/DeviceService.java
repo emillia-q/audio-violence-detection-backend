@@ -46,6 +46,14 @@ public class DeviceService {
         return deviceMapper.toDeviceDetailsResponse(device);
     }
 
+    @Transactional
+    public void disconnectDevice(Long userId, Long deviceId) {
+        Device device = checkUserAccess(userId, deviceId);
+
+        device.setIsActivated(false);
+        device.setUser(null);
+    }
+
     private Device checkUserAccess(Long userId, Long deviceId) {
         userRepository.findById(userId)
                 .orElseThrow(() -> ItemNotFoundException.createForId(User.class, userId));
