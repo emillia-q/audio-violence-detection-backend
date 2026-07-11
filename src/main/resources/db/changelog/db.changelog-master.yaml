@@ -1,3 +1,5 @@
 databaseChangeLog:
   - include:
       file: db/changelog/changesets/001_initial_schema.sql
+  - include:
+      file: db/changelog/changesets/002_add_and_seed_devices.sql

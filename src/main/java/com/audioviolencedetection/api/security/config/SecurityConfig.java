@@ -29,6 +29,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // Public endpoints
                         .requestMatchers("/api/v1/auth/**").permitAll()
+                        // Unlock IoT activation endpoint
+                        .requestMatchers("/api/v1/devices/activate").permitAll()
                         // Unlock default error path
                         .requestMatchers("/error").permitAll()
                         // Unlock Swagger

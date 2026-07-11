@@ -19,4 +19,9 @@ public class ItemNotFoundException extends RuntimeException {
     public static ItemNotFoundException createForEmail(Class<?> entityClass, String email) {
         return new ItemNotFoundException(entityClass, "email", email);
     }
+
+    // Mac Address
+    public static ItemNotFoundException createForMacAddress(Class<?> entityClass, String macAddress) {
+        return new ItemNotFoundException(entityClass, "mac address", macAddress);
+    }
 }
