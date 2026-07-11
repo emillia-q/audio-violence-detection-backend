@@ -36,8 +36,13 @@ public class DeviceService {
         userRepository.findById(userId)
                 .orElseThrow(() -> ItemNotFoundException.createForId(User.class, userId));
 
-        return deviceRepository.findById(deviceId)
-                .map(deviceMapper::toDeviceDetailsResponse)
+        Device device = deviceRepository.findById(deviceId)
                 .orElseThrow(() -> ItemNotFoundException.createForId(Device.class, deviceId));
+
+        // Mask access denied
+        if (device.getUser() == null || !userId.equals(device.getUser().getId()))
+            throw ItemNotFoundException.createForId(Device.class, deviceId);
+
+        return deviceMapper.toDeviceDetailsResponse(device);
     }
 }
