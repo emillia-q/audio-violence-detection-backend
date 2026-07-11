@@ -1,5 +1,6 @@
 package com.audioviolencedetection.api.controller;
 
+import com.audioviolencedetection.api.dto.response.DeviceDetailsResponse;
 import com.audioviolencedetection.api.dto.response.DeviceListResponse;
 import com.audioviolencedetection.api.security.model.SecurityUser;
 import com.audioviolencedetection.api.service.DeviceService;
@@ -9,9 +10,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -35,5 +34,14 @@ public class DeviceController {
             return ResponseEntity.noContent().build();
 
         return ResponseEntity.ok(devices);
+    }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "Return information about device to user")
+    @ApiResponse(responseCode = "200", description = "Returns information about the device")
+    @ApiResponse(responseCode = "404", description = "Device not found")
+    public DeviceDetailsResponse getDeviceDetails(@AuthenticationPrincipal SecurityUser securityUser,
+                                                  @PathVariable("id") Long deviceId) {
+        return deviceService.getDeviceDetails(securityUser.getId(), deviceId);
     }
 }

@@ -1,5 +1,6 @@
 package com.audioviolencedetection.api.mapper;
 
+import com.audioviolencedetection.api.dto.response.DeviceDetailsResponse;
 import com.audioviolencedetection.api.dto.response.DeviceListResponse;
 import com.audioviolencedetection.api.entity.Device;
 import org.springframework.stereotype.Component;
@@ -12,6 +13,15 @@ public class DeviceMapper {
                 device.getId(),
                 device.getMacAddress(),
                 device.getName()
+        );
+    }
+
+    public DeviceDetailsResponse toDeviceDetailsResponse(Device device) {
+        return new DeviceDetailsResponse(
+                device.getId(),
+                device.getMacAddress(),
+                device.getName(),
+                device.getIsActivated()
         );
     }
 }

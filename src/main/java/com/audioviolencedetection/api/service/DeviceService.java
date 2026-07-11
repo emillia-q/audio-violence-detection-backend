@@ -1,5 +1,6 @@
 package com.audioviolencedetection.api.service;
 
+import com.audioviolencedetection.api.dto.response.DeviceDetailsResponse;
 import com.audioviolencedetection.api.dto.response.DeviceListResponse;
 import com.audioviolencedetection.api.entity.Device;
 import com.audioviolencedetection.api.entity.User;
@@ -29,5 +30,19 @@ public class DeviceService {
                 .stream()
                 .map(deviceMapper::toDeviceListResponse)
                 .toList();
+    }
+
+    public DeviceDetailsResponse getDeviceDetails(Long userId, Long deviceId) {
+        userRepository.findById(userId)
+                .orElseThrow(() -> ItemNotFoundException.createForId(User.class, userId));
+
+        Device device = deviceRepository.findById(deviceId)
+                .orElseThrow(() -> ItemNotFoundException.createForId(Device.class, deviceId));
+
+        // Mask access denied
+        if (device.getUser() == null || !userId.equals(device.getUser().getId()))
+            throw ItemNotFoundException.createForId(Device.class, deviceId);
+
+        return deviceMapper.toDeviceDetailsResponse(device);
     }
 }
