@@ -52,6 +52,7 @@ public class DeviceService {
         Device device = checkUserAccess(userId, deviceId);
 
         device.setIsActivated(false);
+        device.setName(null);
         device.setUser(null);
     }
 
