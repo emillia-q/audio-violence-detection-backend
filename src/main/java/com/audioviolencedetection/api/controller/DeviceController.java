@@ -1,5 +1,6 @@
 package com.audioviolencedetection.api.controller;
 
+import com.audioviolencedetection.api.dto.request.DeviceActivationRequest;
 import com.audioviolencedetection.api.dto.request.UpdateDeviceNameRequest;
 import com.audioviolencedetection.api.dto.response.DeviceDetailsResponse;
 import com.audioviolencedetection.api.dto.response.DeviceListResponse;
@@ -47,6 +48,17 @@ public class DeviceController {
     public DeviceDetailsResponse getDeviceDetails(@AuthenticationPrincipal SecurityUser securityUser,
                                                   @PathVariable("id") Long deviceId) {
         return deviceService.getDeviceDetails(securityUser.getId(), deviceId);
+    }
+
+    @PostMapping("/activate")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary = "Activate and pair an IoT device with a user account")
+    @ApiResponse(responseCode = "204", description = "Activated and paired an IoT device")
+    @ApiResponse(responseCode = "400", description = "Invalid request payload or validation failed")
+    @ApiResponse(responseCode = "401", description = "Invalid device secret")
+    @ApiResponse(responseCode = "404", description = "Device or user not found")
+    public void activateAndPairDevice(@Valid @RequestBody DeviceActivationRequest request) {
+
     }
 
     @PatchMapping("/{id}")
