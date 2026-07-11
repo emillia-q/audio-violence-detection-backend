@@ -1,5 +1,6 @@
 package com.audioviolencedetection.api.controller;
 
+import com.audioviolencedetection.api.dto.request.UpdateDeviceNameRequest;
 import com.audioviolencedetection.api.dto.response.DeviceDetailsResponse;
 import com.audioviolencedetection.api.dto.response.DeviceListResponse;
 import com.audioviolencedetection.api.security.model.SecurityUser;
@@ -7,7 +8,9 @@ import com.audioviolencedetection.api.service.DeviceService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -37,11 +40,33 @@ public class DeviceController {
     }
 
     @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Return information about device to user")
     @ApiResponse(responseCode = "200", description = "Returns information about the device")
     @ApiResponse(responseCode = "404", description = "Device not found")
     public DeviceDetailsResponse getDeviceDetails(@AuthenticationPrincipal SecurityUser securityUser,
                                                   @PathVariable("id") Long deviceId) {
         return deviceService.getDeviceDetails(securityUser.getId(), deviceId);
+    }
+
+    @PatchMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Update device name")
+    @ApiResponse(responseCode = "200", description = "Device name updated")
+    @ApiResponse(responseCode = "404", description = "Device not found")
+    public DeviceDetailsResponse updateDeviceName(@AuthenticationPrincipal SecurityUser securityUser,
+                                                  @PathVariable("id") Long deviceId,
+                                                  @Valid @RequestBody UpdateDeviceNameRequest request) {
+        return deviceService.updateDeviceName(securityUser.getId(), deviceId, request);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary = "Disconnect the device from a user")
+    @ApiResponse(responseCode = "204", description = "Device disconnected")
+    @ApiResponse(responseCode = "404", description = "Device not found")
+    public void disconnectDevice(@AuthenticationPrincipal SecurityUser securityUser,
+                                 @PathVariable("id") Long deviceId) {
+        deviceService.disconnectDevice(securityUser.getId(), deviceId);
     }
 }
