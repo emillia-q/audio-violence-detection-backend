@@ -67,6 +67,6 @@ public class DeviceController {
     @ApiResponse(responseCode = "404", description = "Device not found")
     public void disconnectDevice(@AuthenticationPrincipal SecurityUser securityUser,
                                  @PathVariable("id") Long deviceId) {
-        deviceService.
+        deviceService.disconnectDevice(securityUser.getId(), deviceId);
     }
 }
