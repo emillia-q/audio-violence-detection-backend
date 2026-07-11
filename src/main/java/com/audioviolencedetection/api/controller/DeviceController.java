@@ -57,7 +57,7 @@ public class DeviceController {
     public DeviceDetailsResponse updateDeviceName(@AuthenticationPrincipal SecurityUser securityUser,
                                                   @PathVariable("id") Long deviceId,
                                                   @Valid @RequestBody UpdateDeviceNameRequest request) {
-        return deviceService.updateDeviceName(securityUser.getId(), deviceId, request.name());
+        return deviceService.updateDeviceName(securityUser.getId(), deviceId, request);
     }
 
     @DeleteMapping("/{id}")

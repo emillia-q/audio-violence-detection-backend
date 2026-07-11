@@ -1,5 +1,6 @@
 package com.audioviolencedetection.api.service;
 
+import com.audioviolencedetection.api.dto.request.UpdateDeviceNameRequest;
 import com.audioviolencedetection.api.dto.response.DeviceDetailsResponse;
 import com.audioviolencedetection.api.dto.response.DeviceListResponse;
 import com.audioviolencedetection.api.entity.Device;
@@ -39,10 +40,10 @@ public class DeviceService {
     }
 
     @Transactional
-    public DeviceDetailsResponse updateDeviceName(Long userId, Long deviceId, String name) {
+    public DeviceDetailsResponse updateDeviceName(Long userId, Long deviceId, UpdateDeviceNameRequest request) {
         Device device = checkUserAccess(userId, deviceId);
 
-        device.setName(name);
+        device.setName(request.name());
         return deviceMapper.toDeviceDetailsResponse(device);
     }
 
