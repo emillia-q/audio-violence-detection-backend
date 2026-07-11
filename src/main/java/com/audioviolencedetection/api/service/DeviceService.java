@@ -1,5 +1,6 @@
 package com.audioviolencedetection.api.service;
 
+import com.audioviolencedetection.api.dto.response.DeviceDetailsResponse;
 import com.audioviolencedetection.api.dto.response.DeviceListResponse;
 import com.audioviolencedetection.api.entity.Device;
 import com.audioviolencedetection.api.entity.User;
@@ -29,5 +30,14 @@ public class DeviceService {
                 .stream()
                 .map(deviceMapper::toDeviceListResponse)
                 .toList();
+    }
+
+    public DeviceDetailsResponse getDeviceDetails(Long userId, Long deviceId) {
+        userRepository.findById(userId)
+                .orElseThrow(() -> ItemNotFoundException.createForId(User.class, userId));
+
+        return deviceRepository.findById(deviceId)
+                .map(deviceMapper::toDeviceDetailsResponse)
+                .orElseThrow(() -> ItemNotFoundException.createForId(Device.class, deviceId));
     }
 }
