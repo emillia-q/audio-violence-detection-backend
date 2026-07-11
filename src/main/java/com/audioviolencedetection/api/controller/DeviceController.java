@@ -57,8 +57,9 @@ public class DeviceController {
     @ApiResponse(responseCode = "400", description = "Invalid request payload or validation failed")
     @ApiResponse(responseCode = "401", description = "Invalid device secret")
     @ApiResponse(responseCode = "404", description = "Device or user not found")
+    @ApiResponse(responseCode = "409", description = "Device is already assigned to a user")
     public void activateAndPairDevice(@Valid @RequestBody DeviceActivationRequest request) {
-
+        deviceService.activateAndPairDevice(request);
     }
 
     @PatchMapping("/{id}")
