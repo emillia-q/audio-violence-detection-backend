@@ -28,4 +28,7 @@ public class Device {
 
     @Column(name = "is_activated", nullable = false)
     private Boolean isActivated = false;
+
+    @Column(name = "device_secret", nullable = false, length = 64)
+    private String deviceSecret;
 }
