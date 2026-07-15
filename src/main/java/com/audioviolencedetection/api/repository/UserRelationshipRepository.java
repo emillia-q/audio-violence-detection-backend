@@ -16,7 +16,7 @@ public interface UserRelationshipRepository extends JpaRepository<UserRelationsh
             "r.trustedUser.id," +
             "r.trustedUser.nicknameForTrusted" +
             ")" +
-            "form UserRelationship r" +
+            "from UserRelationship r" +
             "where r.userId = :userId")
     List<TrustedUserListResponse> findTrustedUsersByUserId(Long userId);
 }
