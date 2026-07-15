@@ -27,6 +27,9 @@ public class UserRelationship {
     @JoinColumn(name = "trusted_user_id")
     private User trustedUser;
 
-    @Column(name = "custom_nickname", length = 100)
-    private String customNickname;
+    @Column(name = "nickname_for_trusted", length = 100)
+    private String nicknameForTrusted; // Sets supervised
+
+    @Column(name = "nickname_for_supervised", length = 100)
+    private String nicknameForSupervised; // Sets guardian
 }
