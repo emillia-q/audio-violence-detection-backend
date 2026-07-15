@@ -61,12 +61,13 @@ public class UserController {
         return userService.addTrustedUser(request, securityUser.getId());
     }
 
-    @DeleteMapping("/trusted-user")
+    @DeleteMapping("/trusted-users/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Remove a trusted user from the current user profile")
     @ApiResponse(responseCode = "204", description = "Trusted user deleted")
-    @ApiResponse(responseCode = "404", description = "Current user not found")
-    public void deleteTrustedUser(@AuthenticationPrincipal SecurityUser securityUser) {
-        userService.deleteTrustedUser(securityUser.getId());
+    @ApiResponse(responseCode = "404", description = "User, trusted user or relationship not found")
+    public void deleteTrustedUser(@AuthenticationPrincipal SecurityUser securityUser,
+                                  @PathVariable("id") Long trustedUserId) {
+        userService.deleteTrustedUser(securityUser.getId(), trustedUserId);
     }
 }
