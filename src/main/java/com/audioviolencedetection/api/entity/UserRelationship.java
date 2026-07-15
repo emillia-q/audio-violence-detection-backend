@@ -18,7 +18,7 @@ public class UserRelationship {
     private UserRelationshipId id;
 
     @ManyToOne
-    @MapsId("userId")
+    @MapsId("userId") // Take pk from embeddable class & use it as fk in users
     @JoinColumn(name = "user_id")
     private User user;
 
