@@ -65,8 +65,13 @@ public class UserService {
         relationship.setId(relationshipId);
         relationship.setUser(currentUser);
         relationship.setTrustedUser(trustedUser);
-        relationship.setNicknameForTrusted(request.customNickname());
 
+        // If user sent custom nick -> save it
+        // If he didn't -> entity uses its  domain value
+        if (request.customNickname() != null && !request.customNickname().isBlank())
+            relationship.setNicknameForTrusted(request.customNickname());
+
+        userRelationshipRepository.save(relationship);
         return new TrustedUserDetailsResponse(
                 trustedUser.getId(),
                 trustedUser.getEmail(),
