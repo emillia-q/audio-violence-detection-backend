@@ -80,11 +80,11 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteTrustedUser(Long currentUserId) {
-        User currentUser = userRepository.findById(currentUserId)
-                .orElseThrow(() -> ItemNotFoundException.createForId(User.class, currentUserId));
+    public void deleteTrustedUser(Long currentUserId, Long trustedUserId) {
+        UserRelationshipId relationshipId = new UserRelationshipId(currentUserId, trustedUserId);
+        if (!userRelationshipRepository.existsById(relationshipId))
+            throw ItemNotFoundException.createForId(UserRelationship.class, relationshipId);
 
-        currentUser.setTrustedUser(null);
-        userRepository.save(currentUser);
+        userRelationshipRepository.deleteById(relationshipId);
     }
 }
