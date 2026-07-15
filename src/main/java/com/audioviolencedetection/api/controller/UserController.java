@@ -49,15 +49,16 @@ public class UserController {
         return userService.getTrustedUser(securityUser.getId(), trustedUserId);
     }
 
-    @PatchMapping("/trusted-user")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Operation(summary = "Assign a trusted user to the current user profile")
-    @ApiResponse(responseCode = "204", description = "Trusted user set")
+    @PostMapping("/trusted-users")
+    @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "Add new relation, assign trusted user")
+    @ApiResponse(responseCode = "201", description = "Trusted user added")
     @ApiResponse(responseCode = "400", description = "Invalid request data or validation failed")
     @ApiResponse(responseCode = "404", description = "User not found")
-    public void setTrustedUser(@Valid @RequestBody AddTrustedUserRequest request,
+    @ApiResponse(responseCode = "409", description = "User has already assigned this trusted user")
+    public TrustedUserDetailsResponse addTrustedUser(@Valid @RequestBody AddTrustedUserRequest request,
                                @AuthenticationPrincipal SecurityUser securityUser) {
-        userService.setTrustedUser(request, securityUser.getId());
+        return userService.addTrustedUser(request, securityUser.getId());
     }
 
     @DeleteMapping("/trusted-user")
