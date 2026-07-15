@@ -25,6 +25,13 @@ public class User {
     @Column(name = "password", length = 60, nullable = false)
     private String password;
 
+    // I am the guardian & those are people I watch over
     @OneToMany(mappedBy = "trustedUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private Set<UserRelationship> supervisedRelations = new HashSet<>();
+
+    // I have guardians & this is list of them
+    @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private Set<UserRelationship> trustedRelations = new HashSet<>();
 }
