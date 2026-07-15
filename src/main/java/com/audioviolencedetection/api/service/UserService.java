@@ -8,6 +8,7 @@ import com.audioviolencedetection.api.entity.UserRelationship;
 import com.audioviolencedetection.api.entity.UserRelationshipId;
 import com.audioviolencedetection.api.exception.BadRequestException;
 import com.audioviolencedetection.api.exception.ItemNotFoundException;
+import com.audioviolencedetection.api.exception.ResourceInUseException;
 import com.audioviolencedetection.api.repository.UserRelationshipRepository;
 import com.audioviolencedetection.api.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -36,12 +37,13 @@ public class UserService {
         User trustedUser = relationship.getTrustedUser();
         return new TrustedUserDetailsResponse(
                 trustedUser.getId(),
-                trustedUser.getEmail()
+                trustedUser.getEmail(),
+                relationship.getNicknameForTrusted()
         );
     }
 
     @Transactional
-    public void setTrustedUser(AddTrustedUserRequest request, Long currentUserId) {
+    public TrustedUserDetailsResponse addTrustedUser(AddTrustedUserRequest request, Long currentUserId) {
         // Check if users exist
         User currentUser = userRepository.findById(currentUserId)
                 .orElseThrow(() -> ItemNotFoundException.createForId(User.class, currentUserId));
@@ -53,8 +55,23 @@ public class UserService {
         if (request.email().equalsIgnoreCase(currentUser.getEmail()))
             throw new BadRequestException("You cannot set yourself as your own trusted user");
 
-        currentUser.setTrustedUser(trustedUser);
-        userRepository.save(currentUser);
+        // Create new relationship id & check if it does not already exist
+        UserRelationshipId relationshipId = new UserRelationshipId(currentUserId, trustedUser.getId());
+        if (userRelationshipRepository.existsById(relationshipId))
+            throw new ResourceInUseException("This user is already assigned as your trusted user");
+
+        // Create & save object
+        UserRelationship relationship = new UserRelationship();
+        relationship.setId(relationshipId);
+        relationship.setUser(currentUser);
+        relationship.setTrustedUser(trustedUser);
+        relationship.setNicknameForTrusted(request.customNickname());
+
+        return new TrustedUserDetailsResponse(
+                trustedUser.getId(),
+                trustedUser.getEmail(),
+                relationship.getNicknameForTrusted()
+                );
     }
 
     @Transactional
