@@ -12,7 +12,7 @@ CREATE TABLE user_relationships (
 CREATE INDEX idx_relationship_trusted ON user_relationships(trusted_user_id);
 
 -- old data migration
-INSERT INTO user_relationships (user_id, trusted_user_id, custom_nickname)
+INSERT INTO user_relationships (user_id, trusted_user_id, nickname_for_trusted, nickname_for_supervised)
 SELECT id, trusted_user_id, 'My Guardian', 'My Supervised User' -- domain nicks
 FROM users
 WHERE trusted_user_id IS NOT NULL;
