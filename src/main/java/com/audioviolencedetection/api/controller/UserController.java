@@ -2,6 +2,7 @@ package com.audioviolencedetection.api.controller;
 
 import com.audioviolencedetection.api.dto.request.AddTrustedUserRequest;
 import com.audioviolencedetection.api.dto.response.TrustedUserDetailsResponse;
+import com.audioviolencedetection.api.dto.response.TrustedUserListResponse;
 import com.audioviolencedetection.api.security.model.SecurityUser;
 import com.audioviolencedetection.api.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path = "/api/v1/users")
 @RequiredArgsConstructor
@@ -22,7 +25,21 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("/trusted-user")
+    @GetMapping("/trusted-users")
+    @Operation(summary = "Get list of trusted users for user")
+    @ApiResponse(responseCode = "200", description = "Return trusted users list")
+    @ApiResponse(responseCode = "204", description = "No trusted user assigned to this account")
+    @ApiResponse(responseCode = "404", description = "User not found")
+    public ResponseEntity<List<TrustedUserListResponse>> getListOfTrustedUsers(@AuthenticationPrincipal SecurityUser securityUser) {
+        List<TrustedUserListResponse> trustedUsers = userService.getListOfTrustedUsers(securityUser.getId());
+
+        if (trustedUsers.isEmpty())
+            return ResponseEntity.noContent().build();
+
+        return ResponseEntity.ok(trustedUsers);
+    }
+
+    @GetMapping("/trusted-users/{id}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Get trusted user details")
     @ApiResponse(responseCode = "200", description = "Return trusted user details")
