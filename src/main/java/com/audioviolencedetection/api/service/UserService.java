@@ -2,14 +2,17 @@ package com.audioviolencedetection.api.service;
 
 import com.audioviolencedetection.api.dto.request.AddTrustedUserRequest;
 import com.audioviolencedetection.api.dto.response.TrustedUserDetailsResponse;
+import com.audioviolencedetection.api.dto.response.TrustedUserListResponse;
 import com.audioviolencedetection.api.entity.User;
 import com.audioviolencedetection.api.exception.BadRequestException;
 import com.audioviolencedetection.api.exception.ItemNotFoundException;
+import com.audioviolencedetection.api.repository.UserRelationshipRepository;
 import com.audioviolencedetection.api.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -17,6 +20,14 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final UserRelationshipRepository userRelationshipRepository;
+
+    public List<TrustedUserListResponse> getListOfTrustedUsers(Long currentUserId) {
+        userRepository.findById(currentUserId)
+                .orElseThrow(() -> ItemNotFoundException.createForId(User.class, currentUserId));
+
+        return userRelationshipRepository.findTrustedUsersByUserId(currentUserId);
+    }
 
     public Optional<TrustedUserDetailsResponse> getTrustedUser(Long currentUserId) {
         User currentUser = userRepository.findById(currentUserId)
