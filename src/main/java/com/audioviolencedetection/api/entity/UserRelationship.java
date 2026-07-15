@@ -27,9 +27,11 @@ public class UserRelationship {
     @JoinColumn(name = "trusted_user_id")
     private User trustedUser;
 
+    // Set by the supervised user (victim) for their guardian (trusted user)
     @Column(name = "nickname_for_trusted", length = 100)
-    private String nicknameForTrusted = "My Guardian"; // Sets supervised
+    private String nicknameForTrusted = "My Guardian";
 
+    // Set by the guardian (trusted user) for their supervised user (victim)
     @Column(name = "nickname_for_supervised", length = 100)
-    private String nicknameForSupervised = "My Supervised User"; // Sets guardian
+    private String nicknameForSupervised = "My Supervised User";
 }
