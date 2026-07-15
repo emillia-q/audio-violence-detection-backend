@@ -52,6 +52,11 @@ public class GlobalExceptionHandler {
         return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
+    @ExceptionHandler(RelationshipNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleRelationshipNotFoundException(RelationshipNotFoundException ex) {
+        return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
+
     // 409
     @ExceptionHandler(ResourceInUseException.class)
     public ResponseEntity<ErrorResponse> handleResourceInUseException(ResourceInUseException ex) {
