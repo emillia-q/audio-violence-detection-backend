@@ -31,7 +31,7 @@ public class User {
     private Set<UserRelationship> supervisedRelations = new HashSet<>();
 
     // I have guardians & this is list of them
-    @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private Set<UserRelationship> trustedRelations = new HashSet<>();
 }
