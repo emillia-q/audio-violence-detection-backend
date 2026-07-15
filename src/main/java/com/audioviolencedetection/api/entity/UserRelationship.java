@@ -14,6 +14,9 @@ import lombok.Setter;
 @AllArgsConstructor
 public class UserRelationship {
 
+    @EmbeddedId
+    private UserRelationshipId id;
+
     @ManyToOne
     @MapsId("userId")
     @JoinColumn(name = "user_id")
