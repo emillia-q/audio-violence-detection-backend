@@ -24,6 +24,6 @@ public class UserRelationship {
     @JoinColumn(name = "trusted_user_id")
     private User trustedUser;
 
-    @Column(name = "custom_nickname")
+    @Column(name = "custom_nickname", length = 100)
     private String customNickname;
 }
