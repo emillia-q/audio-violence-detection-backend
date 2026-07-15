@@ -4,6 +4,8 @@ import com.audioviolencedetection.api.dto.request.AddTrustedUserRequest;
 import com.audioviolencedetection.api.dto.response.TrustedUserDetailsResponse;
 import com.audioviolencedetection.api.dto.response.TrustedUserListResponse;
 import com.audioviolencedetection.api.entity.User;
+import com.audioviolencedetection.api.entity.UserRelationship;
+import com.audioviolencedetection.api.entity.UserRelationshipId;
 import com.audioviolencedetection.api.exception.BadRequestException;
 import com.audioviolencedetection.api.exception.ItemNotFoundException;
 import com.audioviolencedetection.api.repository.UserRelationshipRepository;
@@ -23,19 +25,19 @@ public class UserService {
     private final UserRelationshipRepository userRelationshipRepository;
 
     public List<TrustedUserListResponse> getListOfTrustedUsers(Long currentUserId) {
-        userRepository.findById(currentUserId)
-                .orElseThrow(() -> ItemNotFoundException.createForId(User.class, currentUserId));
-
         return userRelationshipRepository.findTrustedUsersByUserId(currentUserId);
     }
 
-    public Optional<TrustedUserDetailsResponse> getTrustedUser(Long currentUserId) {
-        User currentUser = userRepository.findById(currentUserId)
-                .orElseThrow(() -> ItemNotFoundException.createForId(User.class, currentUserId));
+    public TrustedUserDetailsResponse getTrustedUser(Long currentUserId, Long trustedUserId) {
+        UserRelationshipId relationshipId = new UserRelationshipId(currentUserId, trustedUserId);
+        UserRelationship relationship = userRelationshipRepository.findById(relationshipId)
+                .orElseThrow(() -> ItemNotFoundException.createForId(UserRelationship.class, relationshipId));
 
-        // When trusted user id is null
-        return Optional.ofNullable(currentUser.getTrustedUser())
-                .map(trusted -> new TrustedUserDetailsResponse(trusted.getId(), trusted.getEmail()));
+        User trustedUser = relationship.getTrustedUser();
+        return new TrustedUserDetailsResponse(
+                trustedUser.getId(),
+                trustedUser.getEmail()
+        );
     }
 
     @Transactional
