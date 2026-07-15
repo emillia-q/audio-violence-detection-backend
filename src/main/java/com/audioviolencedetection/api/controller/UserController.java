@@ -43,12 +43,10 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Get trusted user details")
     @ApiResponse(responseCode = "200", description = "Return trusted user details")
-    @ApiResponse(responseCode = "204", description = "No trusted user assigned to this account")
-    @ApiResponse(responseCode = "404", description = "User not found")
-    public ResponseEntity<TrustedUserDetailsResponse> getTrustedUser(@AuthenticationPrincipal SecurityUser securityUser) {
-        return userService.getTrustedUser(securityUser.getId())
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.noContent().build());
+    @ApiResponse(responseCode = "404", description = "User or relationship not found")
+    public TrustedUserDetailsResponse getTrustedUser(@AuthenticationPrincipal SecurityUser securityUser,
+                                                                     @PathVariable("id") Long trustedUserId) {
+        return userService.getTrustedUser(securityUser.getId(), trustedUserId);
     }
 
     @PatchMapping("/trusted-user")
