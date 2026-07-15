@@ -8,6 +8,7 @@ import com.audioviolencedetection.api.entity.UserRelationship;
 import com.audioviolencedetection.api.entity.UserRelationshipId;
 import com.audioviolencedetection.api.exception.BadRequestException;
 import com.audioviolencedetection.api.exception.ItemNotFoundException;
+import com.audioviolencedetection.api.exception.RelationshipNotFoundException;
 import com.audioviolencedetection.api.exception.ResourceInUseException;
 import com.audioviolencedetection.api.repository.UserRelationshipRepository;
 import com.audioviolencedetection.api.repository.UserRepository;
@@ -32,7 +33,7 @@ public class UserService {
     public TrustedUserDetailsResponse getTrustedUser(Long currentUserId, Long trustedUserId) {
         UserRelationshipId relationshipId = new UserRelationshipId(currentUserId, trustedUserId);
         UserRelationship relationship = userRelationshipRepository.findById(relationshipId)
-                .orElseThrow(() -> ItemNotFoundException.createForId(UserRelationship.class, relationshipId));
+                .orElseThrow(() -> new RelationshipNotFoundException("Trusted user relationship not found"));
 
         User trustedUser = relationship.getTrustedUser();
         return new TrustedUserDetailsResponse(
@@ -83,7 +84,7 @@ public class UserService {
     public void deleteTrustedUser(Long currentUserId, Long trustedUserId) {
         UserRelationshipId relationshipId = new UserRelationshipId(currentUserId, trustedUserId);
         if (!userRelationshipRepository.existsById(relationshipId))
-            throw ItemNotFoundException.createForId(UserRelationship.class, relationshipId);
+            throw new RelationshipNotFoundException("Trusted user relationship not found");
 
         userRelationshipRepository.deleteById(relationshipId);
     }
