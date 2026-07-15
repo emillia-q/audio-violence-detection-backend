@@ -14,7 +14,7 @@ public interface UserRelationshipRepository extends JpaRepository<UserRelationsh
 
     @Query("select new com.audioviolencedetection.api.dto.response.TrustedUserDetailsResponse(" +
             "r.trustedUser.id," +
-            "r.trustedUser.email" +
+            "r.trustedUser.nicknameForTrusted" +
             ")" +
             "form UserRelationship r" +
             "where r.userId = :userId")
