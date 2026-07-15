@@ -28,8 +28,8 @@ public class UserRelationship {
     private User trustedUser;
 
     @Column(name = "nickname_for_trusted", length = 100)
-    private String nicknameForTrusted; // Sets supervised
+    private String nicknameForTrusted = "My Guardian"; // Sets supervised
 
     @Column(name = "nickname_for_supervised", length = 100)
-    private String nicknameForSupervised; // Sets guardian
+    private String nicknameForSupervised = "My Supervised User"; // Sets guardian
 }
