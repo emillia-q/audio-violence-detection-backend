@@ -12,11 +12,11 @@ import java.util.List;
 @Repository
 public interface UserRelationshipRepository extends JpaRepository<UserRelationship, UserRelationshipId> {
 
-    @Query("select new com.audioviolencedetection.api.dto.response.TrustedUserDetailsResponse(" +
-            "r.trustedUser.id," +
-            "r.trustedUser.nicknameForTrusted" +
-            ")" +
-            "from UserRelationship r" +
-            "where r.userId = :userId")
+    @Query("select new com.audioviolencedetection.api.dto.response.TrustedUserListResponse(" +
+            "r.trustedUser.id, " +
+            "r.nicknameForTrusted" +
+            ") " +
+            "from UserRelationship r " +
+            "where r.user.id = :userId")
     List<TrustedUserListResponse> findTrustedUsersByUserId(Long userId);
 }
