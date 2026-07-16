@@ -1,6 +1,7 @@
 package com.audioviolencedetection.api.controller;
 
 import com.audioviolencedetection.api.dto.request.AddTrustedUserRequest;
+import com.audioviolencedetection.api.dto.request.ChangeNicknameRequest;
 import com.audioviolencedetection.api.dto.response.TrustedUserDetailsResponse;
 import com.audioviolencedetection.api.dto.response.TrustedUserListResponse;
 import com.audioviolencedetection.api.security.model.SecurityUser;
@@ -66,8 +67,11 @@ public class UserController {
     @Operation(summary = "Change trusted user nickname")
     @ApiResponse(responseCode = "200", description = "Trusted user nickname changed successfully")
     @ApiResponse(responseCode = "404", description = "Trusted user not found")
-    public TrustedUserDetailsResponse changeTrustedUserNickname(@Valid @RequestBody
-            @AuthenticationPrincipal SecurityUser securityUser)
+    public TrustedUserDetailsResponse changeTrustedUserNickname(@PathVariable("id") Long trustedUserId,
+            ,@Valid @RequestBody ChangeNicknameRequest request,
+            @AuthenticationPrincipal SecurityUser securityUser) {
+
+    }
 
     @DeleteMapping("/trusted-users/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
