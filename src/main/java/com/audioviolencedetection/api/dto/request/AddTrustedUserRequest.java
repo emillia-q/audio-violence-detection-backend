@@ -11,8 +11,8 @@ public record AddTrustedUserRequest(
         String email,
         @Size(max = 100, message = "Nickname cannot be longer than 100 characters")
         @Pattern(
-                regexp = "^[a-zA-Z0-9ąęćłńóśźżĄĘĆŁŃÓŚŹŻ ]*$",
-                message = "Nickname can only contain letters, numbers and spaces"
+                regexp = "^(?=.*\\S)[a-zA-Z0-9ąęćłńóśźżĄĘĆŁŃÓŚŹŻ ]*$",
+                message = "Nickname cannot be blank and can only contain letters, numbers and spaces"
         )
         String customNickname
 ) {
