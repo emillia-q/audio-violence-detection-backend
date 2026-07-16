@@ -2,6 +2,7 @@ package com.audioviolencedetection.api.service;
 
 import com.audioviolencedetection.api.dto.request.AddTrustedUserRequest;
 import com.audioviolencedetection.api.dto.request.ChangeNicknameRequest;
+import com.audioviolencedetection.api.dto.response.ProtectedUserDetailsResponse;
 import com.audioviolencedetection.api.dto.response.ProtectedUserListResponse;
 import com.audioviolencedetection.api.dto.response.TrustedUserDetailsResponse;
 import com.audioviolencedetection.api.dto.response.TrustedUserListResponse;
@@ -38,10 +39,9 @@ public class UserService {
         UserRelationship relationship = userRelationshipRepository.findById(relationshipId)
                 .orElseThrow(() -> new RelationshipNotFoundException("Trusted user relationship not found"));
 
-        User trustedUser = relationship.getTrustedUser();
         return new TrustedUserDetailsResponse(
-                trustedUser.getId(),
-                trustedUser.getEmail(),
+                relationship.getTrustedUser().getId(),
+                relationship.getTrustedUser().getEmail(),
                 relationship.getNicknameForTrusted()
         );
     }
@@ -112,5 +112,17 @@ public class UserService {
     // Protected Users
     public List<ProtectedUserListResponse> getListOfProtectedUsers(Long trustedUserId) {
         return userRelationshipRepository.findProtectedUsersByUserId(trustedUserId);
+    }
+
+    public ProtectedUserDetailsResponse getProtectedUser(Long trustedUserId, Long protectedUserId) {
+        UserRelationshipId relationshipId = new UserRelationshipId(protectedUserId, trustedUserId);
+        UserRelationship relationship = userRelationshipRepository.findById(relationshipId)
+                .orElseThrow(() -> new RelationshipNotFoundException("Trusted user relationship not found"));
+
+        return new ProtectedUserDetailsResponse(
+                relationship.getUser().getId(),
+                relationship.getUser().getEmail(),
+                relationship.getNicknameForSupervised()
+        );
     }
 }
