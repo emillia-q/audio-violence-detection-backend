@@ -69,7 +69,7 @@ public class UserController {
     public TrustedUserDetailsResponse changeTrustedUserNickname(@PathVariable("id") Long trustedUserId,
             @Valid @RequestBody ChangeNicknameRequest request,
             @AuthenticationPrincipal SecurityUser securityUser) {
-
+        return userService.changeTrustedUserNickname(securityUser.getId(), trustedUserId, request);
     }
 
     @DeleteMapping("/trusted-users/{id}")
