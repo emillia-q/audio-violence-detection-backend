@@ -16,9 +16,6 @@ public class Alert {
     @JoinColumn(name = "device_id", referencedColumnName = "id", nullable = false)
     private Device device;
 
-    @Column(name = "is_read", nullable = false)
-    private Boolean isRead = false;
-
     @Column(name = "created_at")
     private OffsetDateTime createdAt = OffsetDateTime.now();
 }
