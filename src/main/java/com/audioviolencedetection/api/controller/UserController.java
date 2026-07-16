@@ -97,4 +97,14 @@ public class UserController {
 
         return ResponseEntity.ok(protectedUsers);
     }
+
+    @GetMapping("/protected-users/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Get protected user details")
+    @ApiResponse(responseCode = "200", description = "Return protected user details")
+    @ApiResponse(responseCode = "404", description = "Protected user relationship not found")
+    public TrustedUserDetailsResponse getProtectedUser(@AuthenticationPrincipal SecurityUser securityUser,
+                                                     @PathVariable("id") Long protectedUserId) {
+        return
+    }
 }
