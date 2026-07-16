@@ -7,7 +7,6 @@ import com.audioviolencedetection.api.dto.response.AuthResponse;
 import com.audioviolencedetection.api.dto.response.DeviceLoginResponse;
 import com.audioviolencedetection.api.entity.Device;
 import com.audioviolencedetection.api.entity.User;
-import com.audioviolencedetection.api.exception.CryptoException;
 import com.audioviolencedetection.api.exception.InvalidDeviceSecretException;
 import com.audioviolencedetection.api.exception.ItemNotFoundException;
 import com.audioviolencedetection.api.exception.ResourceInUseException;
@@ -15,17 +14,13 @@ import com.audioviolencedetection.api.repository.DeviceRepository;
 import com.audioviolencedetection.api.repository.UserRepository;
 import com.audioviolencedetection.api.security.model.SecurityUser;
 import com.audioviolencedetection.api.security.service.JwtService;
+import com.audioviolencedetection.api.util.CryptoUtils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.util.buf.HexUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 @Service
 @RequiredArgsConstructor
@@ -83,19 +78,9 @@ public class AuthService {
         Device device = deviceRepository.findByMacAddress(request.macAddress())
                 .orElseThrow(() -> ItemNotFoundException.createForMacAddress(Device.class, request.macAddress()));
 
-        String incomingHash = hashDeviceSecret(request.deviceSecret());
+        String incomingHash = CryptoUtils.hashDeviceSecret(request.deviceSecret());
         // Check if device secret is the same
         if (!incomingHash.equalsIgnoreCase(device.getDeviceSecret()))
             throw new InvalidDeviceSecretException("Invalid device secret");
-    }
-
-    private String hashDeviceSecret(String secret) {
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] encodedHash = digest.digest(secret.getBytes(StandardCharsets.UTF_8));
-            return HexUtils.toHexString(encodedHash);
-        } catch (NoSuchAlgorithmException e) {
-            throw new CryptoException("SHA-256 algorithm not available", e);
-        }
     }
 }
