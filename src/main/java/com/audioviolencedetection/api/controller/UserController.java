@@ -61,6 +61,14 @@ public class UserController {
         return userService.addTrustedUser(request, securityUser.getId());
     }
 
+    @PatchMapping("/trusted-users/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Change trusted user nickname")
+    @ApiResponse(responseCode = "200", description = "Trusted user nickname changed successfully")
+    @ApiResponse(responseCode = "404", description = "Trusted user not found")
+    public TrustedUserDetailsResponse changeTrustedUserNickname(@Valid @RequestBody
+            @AuthenticationPrincipal SecurityUser securityUser)
+
     @DeleteMapping("/trusted-users/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Remove a trusted user from the current user profile")
