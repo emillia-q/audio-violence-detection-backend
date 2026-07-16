@@ -108,4 +108,15 @@ public class UserController {
                                                          @PathVariable("id") Long protectedUserId) {
         return userService.getProtectedUser(securityUser.getId(), protectedUserId);
     }
+
+    @PatchMapping("/protected-users/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Change protected user nickname")
+    @ApiResponse(responseCode = "200", description = "Protected user nickname changed successfully")
+    @ApiResponse(responseCode = "404", description = "Protected user relationship not found")
+    public ProtectedUserDetailsResponse changeProtectedUserNickname(@PathVariable("id") Long protectedUserId,
+                                                                @Valid @RequestBody ChangeNicknameRequest request,
+                                                                @AuthenticationPrincipal SecurityUser securityUser) {
+        return
+    }
 }
