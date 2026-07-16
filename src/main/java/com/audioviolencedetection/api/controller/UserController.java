@@ -90,6 +90,11 @@ public class UserController {
     @ApiResponse(responseCode = "200", description = "Return protected users list")
     @ApiResponse(responseCode = "204", description = "No protected user assigned to this account")
     public ResponseEntity<List<ProtectedUserListResponse>> getListOfProtectedUsers(@AuthenticationPrincipal SecurityUser securityUser) {
+        List<ProtectedUserListResponse> protectedUsers = userService.getListOfProtectedUsers(securityUser.getId());
 
+        if (protectedUsers.isEmpty())
+            return ResponseEntity.noContent().build();
+
+        return ResponseEntity.ok(protectedUsers);
     }
 }
