@@ -117,6 +117,6 @@ public class UserController {
     public ProtectedUserDetailsResponse changeProtectedUserNickname(@PathVariable("id") Long protectedUserId,
                                                                 @Valid @RequestBody ChangeNicknameRequest request,
                                                                 @AuthenticationPrincipal SecurityUser securityUser) {
-        return
+        return userService.changeProtectedUserNickname(securityUser.getId(), protectedUserId, request);
     }
 }
