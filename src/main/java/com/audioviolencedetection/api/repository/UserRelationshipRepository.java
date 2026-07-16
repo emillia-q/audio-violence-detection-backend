@@ -26,6 +26,6 @@ public interface UserRelationshipRepository extends JpaRepository<UserRelationsh
             "r.nicknameForSupervised" +
             ") " +
             "from UserRelationship r " +
-            "where r.user.id = :userId")
+            "where r.trustedUser.id = :userId")
     List<ProtectedUserListResponse> findProtectedUsersByUserId(Long userId);
 }
