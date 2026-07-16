@@ -1,14 +1,10 @@
 package com.audioviolencedetection.api.dto.request;
 
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-public record AddTrustedUserRequest(
-        @NotBlank(message = "Email cannot be blank")
-        @Email(message = "Invalid email format")
-        String email,
+public record ChangeNicknameRequest(
         @Size(max = 100, message = "Nickname cannot be longer than 100 characters")
         @Pattern(
                 regexp = "^(?=.*\\S)[a-zA-Z0-9ąęćłńóśźżĄĘĆŁŃÓŚŹŻ ]*$",
