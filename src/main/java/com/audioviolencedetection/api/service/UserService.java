@@ -87,7 +87,10 @@ public class UserService {
         UserRelationship relationship = userRelationshipRepository.findById(relationshipId)
                 .orElseThrow(() -> new RelationshipNotFoundException("Trusted user relationship not found"));
 
-        relationship.setNicknameForTrusted(request.customNickname());
+        if (request.customNickname() == null)
+            relationship.setNicknameForTrusted("My Guardian");
+        else
+            relationship.setNicknameForTrusted(request.customNickname());
         return new TrustedUserDetailsResponse(
                 relationship.getTrustedUser().getId(),
                 relationship.getTrustedUser().getEmail(),
