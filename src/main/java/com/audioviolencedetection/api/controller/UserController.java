@@ -68,7 +68,7 @@ public class UserController {
     @ApiResponse(responseCode = "200", description = "Trusted user nickname changed successfully")
     @ApiResponse(responseCode = "404", description = "Trusted user not found")
     public TrustedUserDetailsResponse changeTrustedUserNickname(@PathVariable("id") Long trustedUserId,
-            ,@Valid @RequestBody ChangeNicknameRequest request,
+            @Valid @RequestBody ChangeNicknameRequest request,
             @AuthenticationPrincipal SecurityUser securityUser) {
 
     }
