@@ -5,3 +5,5 @@ databaseChangeLog:
       file: db/changelog/changesets/002_add_and_seed_devices.sql
   - include:
       file: db/changelog/changesets/003_upgrade_users_and_relations.sql
+  - include:
+      file: db/changelog/changesets/004_add_notifications_table.sql
