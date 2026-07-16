@@ -2,6 +2,7 @@ package com.audioviolencedetection.api.controller;
 
 import com.audioviolencedetection.api.dto.request.AddTrustedUserRequest;
 import com.audioviolencedetection.api.dto.request.ChangeNicknameRequest;
+import com.audioviolencedetection.api.dto.response.ProtectedUserDetailsResponse;
 import com.audioviolencedetection.api.dto.response.ProtectedUserListResponse;
 import com.audioviolencedetection.api.dto.response.TrustedUserDetailsResponse;
 import com.audioviolencedetection.api.dto.response.TrustedUserListResponse;
@@ -103,8 +104,8 @@ public class UserController {
     @Operation(summary = "Get protected user details")
     @ApiResponse(responseCode = "200", description = "Return protected user details")
     @ApiResponse(responseCode = "404", description = "Protected user relationship not found")
-    public TrustedUserDetailsResponse getProtectedUser(@AuthenticationPrincipal SecurityUser securityUser,
-                                                     @PathVariable("id") Long protectedUserId) {
-        return
+    public ProtectedUserDetailsResponse getProtectedUser(@AuthenticationPrincipal SecurityUser securityUser,
+                                                         @PathVariable("id") Long protectedUserId) {
+        return userService.getProtectedUser(securityUser.getId(), protectedUserId);
     }
 }
