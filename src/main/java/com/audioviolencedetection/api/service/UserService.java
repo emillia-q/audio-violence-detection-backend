@@ -1,6 +1,7 @@
 package com.audioviolencedetection.api.service;
 
 import com.audioviolencedetection.api.dto.request.AddTrustedUserRequest;
+import com.audioviolencedetection.api.dto.request.ChangeNicknameRequest;
 import com.audioviolencedetection.api.dto.response.TrustedUserDetailsResponse;
 import com.audioviolencedetection.api.dto.response.TrustedUserListResponse;
 import com.audioviolencedetection.api.entity.User;
@@ -77,7 +78,21 @@ public class UserService {
                 trustedUser.getId(),
                 trustedUser.getEmail(),
                 relationship.getNicknameForTrusted()
-                );
+        );
+    }
+
+    @Transactional
+    public TrustedUserDetailsResponse changeTrustedUserNickname(Long currentUserId, Long trustedUserId, ChangeNicknameRequest request) {
+        UserRelationshipId relationshipId = new UserRelationshipId(currentUserId, trustedUserId);
+        UserRelationship relationship = userRelationshipRepository.findById(relationshipId)
+                .orElseThrow(() -> new RelationshipNotFoundException("Trusted user relationship not found"));
+
+        relationship.setNicknameForTrusted(request.customNickname());
+        return new TrustedUserDetailsResponse(
+                relationship.getTrustedUser().getId(),
+                relationship.getTrustedUser().getEmail(),
+                relationship.getNicknameForTrusted()
+        );
     }
 
     @Transactional
