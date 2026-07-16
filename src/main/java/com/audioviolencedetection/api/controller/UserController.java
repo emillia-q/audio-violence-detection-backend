@@ -119,4 +119,14 @@ public class UserController {
                                                                 @AuthenticationPrincipal SecurityUser securityUser) {
         return userService.changeProtectedUserNickname(securityUser.getId(), protectedUserId, request);
     }
+
+    @DeleteMapping("/protected-users/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary = "Remove a protected user from the current user profile")
+    @ApiResponse(responseCode = "204", description = "Protected user deleted")
+    @ApiResponse(responseCode = "404", description = "Protected user relationship not found")
+    public void deleteProtectedUser(@AuthenticationPrincipal SecurityUser securityUser,
+                                  @PathVariable("id") Long protectedUserId) {
+
+    }
 }
