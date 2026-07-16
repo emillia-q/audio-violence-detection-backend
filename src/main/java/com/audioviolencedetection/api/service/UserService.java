@@ -117,8 +117,25 @@ public class UserService {
     public ProtectedUserDetailsResponse getProtectedUser(Long trustedUserId, Long protectedUserId) {
         UserRelationshipId relationshipId = new UserRelationshipId(protectedUserId, trustedUserId);
         UserRelationship relationship = userRelationshipRepository.findById(relationshipId)
-                .orElseThrow(() -> new RelationshipNotFoundException("Trusted user relationship not found"));
+                .orElseThrow(() -> new RelationshipNotFoundException("Protected user relationship not found"));
 
+        return new ProtectedUserDetailsResponse(
+                relationship.getUser().getId(),
+                relationship.getUser().getEmail(),
+                relationship.getNicknameForSupervised()
+        );
+    }
+
+    @Transactional
+    public ProtectedUserDetailsResponse changeProtectedUserNickname(Long trustedUserId, Long protectedUserId, ChangeNicknameRequest request) {
+        UserRelationshipId relationshipId = new UserRelationshipId(protectedUserId, trustedUserId);
+        UserRelationship relationship = userRelationshipRepository.findById(relationshipId)
+                .orElseThrow(() -> new RelationshipNotFoundException("Protected user relationship not found"));
+
+        if (request.customNickname() == null)
+            relationship.setNicknameForSupervised("My Supervised User");
+        else
+            relationship.setNicknameForSupervised(request.customNickname());
         return new ProtectedUserDetailsResponse(
                 relationship.getUser().getId(),
                 relationship.getUser().getEmail(),
