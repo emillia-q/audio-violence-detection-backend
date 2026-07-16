@@ -100,15 +100,6 @@ public class UserService {
         );
     }
 
-    @Transactional
-    public void deleteTrustedUser(Long protectedUserId, Long trustedUserId) {
-        UserRelationshipId relationshipId = new UserRelationshipId(protectedUserId, trustedUserId);
-        if (!userRelationshipRepository.existsById(relationshipId))
-            throw new RelationshipNotFoundException("Trusted user relationship not found");
-
-        userRelationshipRepository.deleteById(relationshipId);
-    }
-
     // Protected Users
     public List<ProtectedUserListResponse> getListOfProtectedUsers(Long trustedUserId) {
         return userRelationshipRepository.findProtectedUsersByUserId(trustedUserId);
@@ -141,5 +132,15 @@ public class UserService {
                 relationship.getUser().getEmail(),
                 relationship.getNicknameForSupervised()
         );
+    }
+
+    // Shared
+    @Transactional
+    public void deleteRelatedUser(Long protectedUserId, Long trustedUserId) {
+        UserRelationshipId relationshipId = new UserRelationshipId(protectedUserId, trustedUserId);
+        if (!userRelationshipRepository.existsById(relationshipId))
+            throw new RelationshipNotFoundException("Trusted user relationship not found");
+
+        userRelationshipRepository.deleteById(relationshipId);
     }
 }

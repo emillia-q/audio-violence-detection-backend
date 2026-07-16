@@ -82,7 +82,7 @@ public class UserController {
     @ApiResponse(responseCode = "404", description = "Trusted user relationship not found")
     public void deleteTrustedUser(@AuthenticationPrincipal SecurityUser securityUser,
                                   @PathVariable("id") Long trustedUserId) {
-        userService.deleteTrustedUser(securityUser.getId(), trustedUserId);
+        userService.deleteRelatedUser(securityUser.getId(), trustedUserId);
     }
 
     // Protected Users
@@ -127,6 +127,6 @@ public class UserController {
     @ApiResponse(responseCode = "404", description = "Protected user relationship not found")
     public void deleteProtectedUser(@AuthenticationPrincipal SecurityUser securityUser,
                                   @PathVariable("id") Long protectedUserId) {
-
+        userService.deleteRelatedUser(protectedUserId, securityUser.getId());
     }
 }
