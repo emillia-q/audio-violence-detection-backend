@@ -2,6 +2,7 @@ package com.audioviolencedetection.api.controller;
 
 import com.audioviolencedetection.api.dto.request.AddTrustedUserRequest;
 import com.audioviolencedetection.api.dto.request.ChangeNicknameRequest;
+import com.audioviolencedetection.api.dto.response.ProtectedUserListResponse;
 import com.audioviolencedetection.api.dto.response.TrustedUserDetailsResponse;
 import com.audioviolencedetection.api.dto.response.TrustedUserListResponse;
 import com.audioviolencedetection.api.security.model.SecurityUser;
@@ -26,6 +27,7 @@ public class UserController {
 
     private final UserService userService;
 
+    // Trusted Users
     @GetMapping("/trusted-users")
     @Operation(summary = "Get list of trusted users for user")
     @ApiResponse(responseCode = "200", description = "Return trusted users list")
@@ -80,5 +82,14 @@ public class UserController {
     public void deleteTrustedUser(@AuthenticationPrincipal SecurityUser securityUser,
                                   @PathVariable("id") Long trustedUserId) {
         userService.deleteTrustedUser(securityUser.getId(), trustedUserId);
+    }
+
+    // Protected Users
+    @GetMapping("/protected-users")
+    @Operation(summary = "Get list of protected users for user")
+    @ApiResponse(responseCode = "200", description = "Return protected users list")
+    @ApiResponse(responseCode = "204", description = "No protected user assigned to this account")
+    public ResponseEntity<List<ProtectedUserListResponse>> getListOfProtectedUsers(@AuthenticationPrincipal SecurityUser securityUser) {
+
     }
 }
