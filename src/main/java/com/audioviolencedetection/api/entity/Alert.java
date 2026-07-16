@@ -16,6 +16,6 @@ public class Alert {
     @JoinColumn(name = "device_id", referencedColumnName = "id", nullable = false)
     private Device device;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", updatable = false)
     private OffsetDateTime createdAt = OffsetDateTime.now();
 }
