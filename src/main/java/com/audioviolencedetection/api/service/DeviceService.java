@@ -54,7 +54,7 @@ public class DeviceService {
                 .orElseThrow(() -> ItemNotFoundException.createForMacAddress(Device.class, request.macAddress()));
 
         String incomingHash = hashDeviceSecret(request.deviceSecret());
-        // Check if device secret is teh same
+        // Check if device secret is the same
         if (!incomingHash.equalsIgnoreCase(device.getDeviceSecret()))
             throw new InvalidDeviceSecretException("Invalid device secret");
 
@@ -68,6 +68,16 @@ public class DeviceService {
         // Assign a new user to the device & activate
         device.setUser(user);
         device.setIsActivated(true);
+    }
+
+    private String hashDeviceSecret(String secret) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] encodedHash = digest.digest(secret.getBytes(StandardCharsets.UTF_8));
+            return HexUtils.toHexString(encodedHash);
+        } catch (NoSuchAlgorithmException e) {
+            throw new CryptoException("SHA-256 algorithm not available", e);
+        }
     }
 
     @Transactional
@@ -100,15 +110,4 @@ public class DeviceService {
 
         return device;
     }
-
-    private String hashDeviceSecret(String secret) {
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] encodedHash = digest.digest(secret.getBytes(StandardCharsets.UTF_8));
-            return HexUtils.toHexString(encodedHash);
-        } catch (NoSuchAlgorithmException e) {
-            throw new CryptoException("SHA-256 algorithm not available", e);
-        }
-    }
-
 }
