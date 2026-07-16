@@ -2,6 +2,8 @@ package com.audioviolencedetection.api.service;
 
 import com.audioviolencedetection.api.dto.request.AddTrustedUserRequest;
 import com.audioviolencedetection.api.dto.request.ChangeNicknameRequest;
+import com.audioviolencedetection.api.dto.response.ProtectedUserDetailsResponse;
+import com.audioviolencedetection.api.dto.response.ProtectedUserListResponse;
 import com.audioviolencedetection.api.dto.response.TrustedUserDetailsResponse;
 import com.audioviolencedetection.api.dto.response.TrustedUserListResponse;
 import com.audioviolencedetection.api.entity.User;
@@ -27,28 +29,28 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserRelationshipRepository userRelationshipRepository;
 
-    public List<TrustedUserListResponse> getListOfTrustedUsers(Long currentUserId) {
-        return userRelationshipRepository.findTrustedUsersByUserId(currentUserId);
+    // Trusted Users
+    public List<TrustedUserListResponse> getListOfTrustedUsers(Long protectedUserId) {
+        return userRelationshipRepository.findTrustedUsersByUserId(protectedUserId);
     }
 
-    public TrustedUserDetailsResponse getTrustedUser(Long currentUserId, Long trustedUserId) {
-        UserRelationshipId relationshipId = new UserRelationshipId(currentUserId, trustedUserId);
+    public TrustedUserDetailsResponse getTrustedUser(Long protectedUserId, Long trustedUserId) {
+        UserRelationshipId relationshipId = new UserRelationshipId(protectedUserId, trustedUserId);
         UserRelationship relationship = userRelationshipRepository.findById(relationshipId)
                 .orElseThrow(() -> new RelationshipNotFoundException("Trusted user relationship not found"));
 
-        User trustedUser = relationship.getTrustedUser();
         return new TrustedUserDetailsResponse(
-                trustedUser.getId(),
-                trustedUser.getEmail(),
+                relationship.getTrustedUser().getId(),
+                relationship.getTrustedUser().getEmail(),
                 relationship.getNicknameForTrusted()
         );
     }
 
     @Transactional
-    public TrustedUserDetailsResponse addTrustedUser(AddTrustedUserRequest request, Long currentUserId) {
+    public TrustedUserDetailsResponse addTrustedUser(AddTrustedUserRequest request, Long protectedUserId) {
         // Check if users exist
-        User currentUser = userRepository.findById(currentUserId)
-                .orElseThrow(() -> ItemNotFoundException.createForId(User.class, currentUserId));
+        User currentUser = userRepository.findById(protectedUserId)
+                .orElseThrow(() -> ItemNotFoundException.createForId(User.class, protectedUserId));
 
         User trustedUser = userRepository.findByEmail(request.email())
                 .orElseThrow(() -> ItemNotFoundException.createForEmail(User.class, request.email()));
@@ -58,7 +60,7 @@ public class UserService {
             throw new BadRequestException("You cannot set yourself as your own trusted user");
 
         // Create new relationship id & check if it does not already exist
-        UserRelationshipId relationshipId = new UserRelationshipId(currentUserId, trustedUser.getId());
+        UserRelationshipId relationshipId = new UserRelationshipId(protectedUserId, trustedUser.getId());
         if (userRelationshipRepository.existsById(relationshipId))
             throw new ResourceInUseException("This user is already assigned as your trusted user");
 
@@ -82,8 +84,8 @@ public class UserService {
     }
 
     @Transactional
-    public TrustedUserDetailsResponse changeTrustedUserNickname(Long currentUserId, Long trustedUserId, ChangeNicknameRequest request) {
-        UserRelationshipId relationshipId = new UserRelationshipId(currentUserId, trustedUserId);
+    public TrustedUserDetailsResponse changeTrustedUserNickname(Long protectedUserId, Long trustedUserId, ChangeNicknameRequest request) {
+        UserRelationshipId relationshipId = new UserRelationshipId(protectedUserId, trustedUserId);
         UserRelationship relationship = userRelationshipRepository.findById(relationshipId)
                 .orElseThrow(() -> new RelationshipNotFoundException("Trusted user relationship not found"));
 
@@ -98,9 +100,44 @@ public class UserService {
         );
     }
 
+    // Protected Users
+    public List<ProtectedUserListResponse> getListOfProtectedUsers(Long trustedUserId) {
+        return userRelationshipRepository.findProtectedUsersByUserId(trustedUserId);
+    }
+
+    public ProtectedUserDetailsResponse getProtectedUser(Long trustedUserId, Long protectedUserId) {
+        UserRelationshipId relationshipId = new UserRelationshipId(protectedUserId, trustedUserId);
+        UserRelationship relationship = userRelationshipRepository.findById(relationshipId)
+                .orElseThrow(() -> new RelationshipNotFoundException("Protected user relationship not found"));
+
+        return new ProtectedUserDetailsResponse(
+                relationship.getUser().getId(),
+                relationship.getUser().getEmail(),
+                relationship.getNicknameForSupervised()
+        );
+    }
+
     @Transactional
-    public void deleteTrustedUser(Long currentUserId, Long trustedUserId) {
-        UserRelationshipId relationshipId = new UserRelationshipId(currentUserId, trustedUserId);
+    public ProtectedUserDetailsResponse changeProtectedUserNickname(Long trustedUserId, Long protectedUserId, ChangeNicknameRequest request) {
+        UserRelationshipId relationshipId = new UserRelationshipId(protectedUserId, trustedUserId);
+        UserRelationship relationship = userRelationshipRepository.findById(relationshipId)
+                .orElseThrow(() -> new RelationshipNotFoundException("Protected user relationship not found"));
+
+        if (request.customNickname() == null)
+            relationship.setNicknameForSupervised("My Supervised User");
+        else
+            relationship.setNicknameForSupervised(request.customNickname());
+        return new ProtectedUserDetailsResponse(
+                relationship.getUser().getId(),
+                relationship.getUser().getEmail(),
+                relationship.getNicknameForSupervised()
+        );
+    }
+
+    // Shared
+    @Transactional
+    public void deleteRelatedUser(Long protectedUserId, Long trustedUserId) {
+        UserRelationshipId relationshipId = new UserRelationshipId(protectedUserId, trustedUserId);
         if (!userRelationshipRepository.existsById(relationshipId))
             throw new RelationshipNotFoundException("Trusted user relationship not found");
 

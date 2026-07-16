@@ -2,6 +2,8 @@ package com.audioviolencedetection.api.controller;
 
 import com.audioviolencedetection.api.dto.request.AddTrustedUserRequest;
 import com.audioviolencedetection.api.dto.request.ChangeNicknameRequest;
+import com.audioviolencedetection.api.dto.response.ProtectedUserDetailsResponse;
+import com.audioviolencedetection.api.dto.response.ProtectedUserListResponse;
 import com.audioviolencedetection.api.dto.response.TrustedUserDetailsResponse;
 import com.audioviolencedetection.api.dto.response.TrustedUserListResponse;
 import com.audioviolencedetection.api.security.model.SecurityUser;
@@ -26,6 +28,7 @@ public class UserController {
 
     private final UserService userService;
 
+    // Trusted Users
     @GetMapping("/trusted-users")
     @Operation(summary = "Get list of trusted users for user")
     @ApiResponse(responseCode = "200", description = "Return trusted users list")
@@ -79,6 +82,51 @@ public class UserController {
     @ApiResponse(responseCode = "404", description = "Trusted user relationship not found")
     public void deleteTrustedUser(@AuthenticationPrincipal SecurityUser securityUser,
                                   @PathVariable("id") Long trustedUserId) {
-        userService.deleteTrustedUser(securityUser.getId(), trustedUserId);
+        userService.deleteRelatedUser(securityUser.getId(), trustedUserId);
+    }
+
+    // Protected Users
+    @GetMapping("/protected-users")
+    @Operation(summary = "Get list of protected users for user")
+    @ApiResponse(responseCode = "200", description = "Return protected users list")
+    @ApiResponse(responseCode = "204", description = "No protected user assigned to this account")
+    public ResponseEntity<List<ProtectedUserListResponse>> getListOfProtectedUsers(@AuthenticationPrincipal SecurityUser securityUser) {
+        List<ProtectedUserListResponse> protectedUsers = userService.getListOfProtectedUsers(securityUser.getId());
+
+        if (protectedUsers.isEmpty())
+            return ResponseEntity.noContent().build();
+
+        return ResponseEntity.ok(protectedUsers);
+    }
+
+    @GetMapping("/protected-users/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Get protected user details")
+    @ApiResponse(responseCode = "200", description = "Return protected user details")
+    @ApiResponse(responseCode = "404", description = "Protected user relationship not found")
+    public ProtectedUserDetailsResponse getProtectedUser(@AuthenticationPrincipal SecurityUser securityUser,
+                                                         @PathVariable("id") Long protectedUserId) {
+        return userService.getProtectedUser(securityUser.getId(), protectedUserId);
+    }
+
+    @PatchMapping("/protected-users/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Change protected user nickname")
+    @ApiResponse(responseCode = "200", description = "Protected user nickname changed successfully")
+    @ApiResponse(responseCode = "404", description = "Protected user relationship not found")
+    public ProtectedUserDetailsResponse changeProtectedUserNickname(@PathVariable("id") Long protectedUserId,
+                                                                @Valid @RequestBody ChangeNicknameRequest request,
+                                                                @AuthenticationPrincipal SecurityUser securityUser) {
+        return userService.changeProtectedUserNickname(securityUser.getId(), protectedUserId, request);
+    }
+
+    @DeleteMapping("/protected-users/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary = "Remove a protected user from the current user profile")
+    @ApiResponse(responseCode = "204", description = "Protected user deleted")
+    @ApiResponse(responseCode = "404", description = "Protected user relationship not found")
+    public void deleteProtectedUser(@AuthenticationPrincipal SecurityUser securityUser,
+                                  @PathVariable("id") Long protectedUserId) {
+        userService.deleteRelatedUser(protectedUserId, securityUser.getId());
     }
 }

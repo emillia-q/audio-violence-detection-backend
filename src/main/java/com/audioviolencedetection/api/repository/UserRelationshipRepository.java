@@ -1,5 +1,6 @@
 package com.audioviolencedetection.api.repository;
 
+import com.audioviolencedetection.api.dto.response.ProtectedUserListResponse;
 import com.audioviolencedetection.api.dto.response.TrustedUserListResponse;
 import com.audioviolencedetection.api.entity.UserRelationship;
 import com.audioviolencedetection.api.entity.UserRelationshipId;
@@ -19,4 +20,12 @@ public interface UserRelationshipRepository extends JpaRepository<UserRelationsh
             "from UserRelationship r " +
             "where r.user.id = :userId")
     List<TrustedUserListResponse> findTrustedUsersByUserId(Long userId);
+
+    @Query("select new com.audioviolencedetection.api.dto.response.ProtectedUserListResponse(" +
+            "r.user.id, " +
+            "r.nicknameForSupervised" +
+            ") " +
+            "from UserRelationship r " +
+            "where r.trustedUser.id = :userId")
+    List<ProtectedUserListResponse> findProtectedUsersByUserId(Long userId);
 }
