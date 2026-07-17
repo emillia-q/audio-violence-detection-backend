@@ -39,8 +39,10 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/swagger-ui.html"
                         ).permitAll()
-                        // Other endpoints require authentication
-                        .anyRequest().authenticated()
+                        // Device can only send alerts
+                        .requestMatchers("/api/v1/alerts/**").hasRole("DEVICE")
+                        // Other endpoints require authentication & role USER
+                        .anyRequest().hasRole("USER")
                 )
                 // Stateless session (required for JWT)
                 .sessionManagement(session ->
