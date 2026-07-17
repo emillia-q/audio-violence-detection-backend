@@ -3,6 +3,7 @@ package com.audioviolencedetection.api.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -90,6 +91,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorResponse> handleIncorrectDataFormatException(HttpMessageNotReadableException ex) {
         return buildResponse(HttpStatus.BAD_REQUEST, "Malformed JSON request body or incorrect data format");
+    }
+
+    // 403, access denied
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException ex) {
+        return buildResponse(HttpStatus.FORBIDDEN, "Access denied: You do not have the required role to access this resource");
     }
 
     // 405, confusion of methods
