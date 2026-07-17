@@ -32,7 +32,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         // Extract and clear the token from Bearer
         jwtService.getTokenFromRequest(request).ifPresent(token -> {
-            String email = jwtService.extractEmail(token);
+            String email = jwtService.extractUsername(token);
 
             // If the email exists and the user is not yet logged in in this HTTP request
             if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
