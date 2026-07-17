@@ -3,6 +3,7 @@ package com.audioviolencedetection.api.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -27,10 +28,16 @@ public class GlobalExceptionHandler {
     }
 
     // Security
-    // 401
+    // 401 - user
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ErrorResponse> handleBadCredentialsException(BadCredentialsException ex) {
         return buildResponse(HttpStatus.UNAUTHORIZED, "Invalid email or password");
+    }
+
+    // 401 - IoT secret
+    @ExceptionHandler(InvalidDeviceSecretException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidDeviceSecretException(InvalidDeviceSecretException ex) {
+        return buildResponse(HttpStatus.UNAUTHORIZED, ex.getMessage());
     }
 
     // Business logic
@@ -43,6 +50,11 @@ public class GlobalExceptionHandler {
     // 404
     @ExceptionHandler(ItemNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleItemNotFoundException(ItemNotFoundException ex) {
+        return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
+
+    @ExceptionHandler(RelationshipNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleRelationshipNotFoundException(RelationshipNotFoundException ex) {
         return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
@@ -81,6 +93,12 @@ public class GlobalExceptionHandler {
         return buildResponse(HttpStatus.BAD_REQUEST, "Malformed JSON request body or incorrect data format");
     }
 
+    // 403, access denied
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException ex) {
+        return buildResponse(HttpStatus.FORBIDDEN, "Access denied: You do not have the required role to access this resource");
+    }
+
     // 405, confusion of methods
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<ErrorResponse> handleMethodNotSupportedException(HttpRequestMethodNotSupportedException ex) {
@@ -94,6 +112,11 @@ public class GlobalExceptionHandler {
     }
 
     // 500
+    @ExceptionHandler(CryptoException.class)
+    public ResponseEntity<ErrorResponse> handleCryptoException(CryptoException ex) {
+        return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGlobalException(Exception ex) {
         return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred on the server");

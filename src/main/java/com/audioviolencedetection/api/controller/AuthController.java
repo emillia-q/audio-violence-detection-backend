@@ -1,8 +1,10 @@
 package com.audioviolencedetection.api.controller;
 
+import com.audioviolencedetection.api.dto.request.DeviceLoginRequest;
 import com.audioviolencedetection.api.dto.request.LoginRequest;
 import com.audioviolencedetection.api.dto.request.RegisterRequest;
 import com.audioviolencedetection.api.dto.response.AuthResponse;
+import com.audioviolencedetection.api.dto.response.DeviceLoginResponse;
 import com.audioviolencedetection.api.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -15,8 +17,10 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(path = "/api/v1/auth")
 @RequiredArgsConstructor
 public class AuthController {
+
     private final AuthService authService;
 
+    // User
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Authenticate user and return JWT token")
@@ -35,5 +39,16 @@ public class AuthController {
     @ApiResponse(responseCode = "409", description = "Email address is already taken")
     public AuthResponse register(@Valid @RequestBody RegisterRequest request) {
         return authService.register(request);
+    }
+
+    // Device
+    @PostMapping("/device-login")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Authenticate device and return JWT token")
+    @ApiResponse(responseCode = "200", description = "Device successfully authenticated")
+    @ApiResponse(responseCode = "400", description = "Invalid request data or validation failed")
+    @ApiResponse(responseCode = "401", description = "Invalid MAC address or device secret key")
+    public DeviceLoginResponse authenticateDevice(@Valid @RequestBody DeviceLoginRequest request) {
+        return authService.authenticateDevice(request);
     }
 }

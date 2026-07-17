@@ -3,6 +3,9 @@ package com.audioviolencedetection.api.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "users")
 @Getter
@@ -22,7 +25,13 @@ public class User {
     @Column(name = "password", length = 60, nullable = false)
     private String password;
 
-    @OneToOne
-    @JoinColumn(name = "trusted_user_id", referencedColumnName = "id")
-    private User trustedUser;
+    // I am the guardian & those are people I watch over
+    @OneToMany(mappedBy = "trustedUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private Set<UserRelationship> supervisedRelations = new HashSet<>();
+
+    // I have guardians & this is list of them
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private Set<UserRelationship> trustedRelations = new HashSet<>();
 }

@@ -1,5 +1,8 @@
 package com.audioviolencedetection.api.security.filter;
 
+import com.audioviolencedetection.api.entity.Device;
+import com.audioviolencedetection.api.security.model.SecurityDevice;
+import com.audioviolencedetection.api.security.model.SecurityUser;
 import com.audioviolencedetection.api.security.service.JwtService;
 import jakarta.annotation.Nonnull;
 import jakarta.servlet.FilterChain;
@@ -32,12 +35,26 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         // Extract and clear the token from Bearer
         jwtService.getTokenFromRequest(request).ifPresent(token -> {
-            String email = jwtService.extractEmail(token);
+            String userName = jwtService.extractUsername(token);
+            String userType = jwtService.extractUserType(token);
 
-            // If the email exists and the user is not yet logged in in this HTTP request
-            if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                // Load user data by extracting it from the database via email
-                UserDetails userDetails = this.userDetailsService.loadUserByUsername(email);
+            // If the userName exists and the user/device is not yet logged in in this HTTP request
+            if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                UserDetails userDetails;
+
+                if ("device".equals(userType)) {
+                    Long deviceId = jwtService.extractDeviceId(token);
+
+                    Device device = Device.builder()
+                            .id(deviceId)
+                            .macAddress(userName)
+                            .isActivated(true)
+                            .build();
+                    userDetails = new SecurityDevice(device);
+                } else {
+                    // Load user data by extracting it from the database via userName
+                    userDetails = this.userDetailsService.loadUserByUsername(userName);
+                }
 
                 // Check whether token matches user from the database and it has not expired
                 if (jwtService.isTokenValid(token, userDetails)) {

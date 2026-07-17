@@ -5,16 +5,14 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class JwtService {
@@ -29,38 +27,49 @@ public class JwtService {
         this.expirationSeconds = expirationSeconds;
     }
 
-    public String generateToken(UserDetails userDetails, Long userId) {
+    public String generateToken(UserDetails userDetails, Long userId, String className) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("role", userDetails.getAuthorities());
-        claims.put("userId", userId);
 
+        // Change GrantedAuthority objects to basic Strings
+        List<String> roles = userDetails.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .toList();
+        claims.put("role", roles);
+        claims.put("userType", className.toLowerCase());
+        claims.put(className.toLowerCase() + "Id", userId);
+
+        return buildToken(claims, userDetails.getUsername());
+    }
+
+    private String buildToken(Map<String, Object> claims, String subject) {
         Instant now = Instant.now();
         Instant expiresAt = now.plusSeconds(expirationSeconds);
 
         return Jwts.builder()
                 .claims(claims)
-                .subject(userDetails.getUsername())
+                .subject(subject)
                 .issuedAt(Date.from(now))
                 .expiration(Date.from(expiresAt))
                 .signWith(signingKey)
                 .compact();
     }
 
-    public String extractEmail(String token) {
+    public String extractUsername(String token) {
         return extractAllClaims(token).getSubject();
     }
 
-    public boolean isTokenValid(String token, UserDetails userDetails) {
-        final String email = extractEmail(token);
-        boolean isExpired = extractAllClaims(token).getExpiration().before(new Date());
-        return (email.equals(userDetails.getUsername()) && !isExpired);
+    public String extractUserType(String token) {
+        return extractAllClaims(token).get("userType", String.class);
     }
 
-    public Optional<String> getTokenFromRequest(HttpServletRequest request) {
-        final String authHeader = request.getHeader("Authorization");
-        if (authHeader == null || !authHeader.startsWith("Bearer "))
-            return Optional.empty();
-        return Optional.of(authHeader.substring(7));
+    public Long extractDeviceId(String token) {
+        return extractAllClaims(token).get("deviceId", Long.class);
+    }
+
+    public boolean isTokenValid(String token, UserDetails userDetails) {
+        final String email = extractUsername(token);
+        boolean isExpired = extractAllClaims(token).getExpiration().before(new Date());
+        return (email.equals(userDetails.getUsername()) && !isExpired);
     }
 
     private Claims extractAllClaims(String token) {
@@ -69,5 +78,12 @@ public class JwtService {
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
+    }
+
+    public Optional<String> getTokenFromRequest(HttpServletRequest request) {
+        final String authHeader = request.getHeader("Authorization");
+        if (authHeader == null || !authHeader.startsWith("Bearer "))
+            return Optional.empty();
+        return Optional.of(authHeader.substring(7));
     }
 }
