@@ -13,6 +13,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +28,7 @@ public class DeviceController {
     private final DeviceService deviceService;
 
     @GetMapping
+    @PreAuthorize("hasRole('USER')")
     @Operation(summary = "Return a list of user devices")
     @ApiResponse(responseCode = "200", description = "Returns a list of all user devices")
     @ApiResponse(responseCode = "204", description = "User has no devices")
@@ -41,6 +43,7 @@ public class DeviceController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('USER')")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Return information about device to user")
     @ApiResponse(responseCode = "200", description = "Returns information about the device")
@@ -63,6 +66,7 @@ public class DeviceController {
     }
 
     @PatchMapping("/{id}")
+    @PreAuthorize("hasRole('USER')")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Update device name")
     @ApiResponse(responseCode = "200", description = "Device name updated")
@@ -74,6 +78,7 @@ public class DeviceController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('USER')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Disconnect the device from a user")
     @ApiResponse(responseCode = "204", description = "Device disconnected")

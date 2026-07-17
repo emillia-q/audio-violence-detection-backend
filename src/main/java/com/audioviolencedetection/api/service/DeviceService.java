@@ -6,22 +6,17 @@ import com.audioviolencedetection.api.dto.response.DeviceDetailsResponse;
 import com.audioviolencedetection.api.dto.response.DeviceListResponse;
 import com.audioviolencedetection.api.entity.Device;
 import com.audioviolencedetection.api.entity.User;
-import com.audioviolencedetection.api.exception.CryptoException;
 import com.audioviolencedetection.api.exception.InvalidDeviceSecretException;
 import com.audioviolencedetection.api.exception.ItemNotFoundException;
 import com.audioviolencedetection.api.exception.ResourceInUseException;
 import com.audioviolencedetection.api.mapper.DeviceMapper;
 import com.audioviolencedetection.api.repository.DeviceRepository;
 import com.audioviolencedetection.api.repository.UserRepository;
+import com.audioviolencedetection.api.util.CryptoUtils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.util.buf.HexUtils;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 @Service
@@ -53,8 +48,8 @@ public class DeviceService {
         Device device = deviceRepository.findByMacAddress(request.macAddress())
                 .orElseThrow(() -> ItemNotFoundException.createForMacAddress(Device.class, request.macAddress()));
 
-        String incomingHash = hashDeviceSecret(request.deviceSecret());
-        // Check if device secret is teh same
+        String incomingHash = CryptoUtils.hashDeviceSecret(request.deviceSecret());
+        // Check if device secret is the same
         if (!incomingHash.equalsIgnoreCase(device.getDeviceSecret()))
             throw new InvalidDeviceSecretException("Invalid device secret");
 
@@ -100,15 +95,4 @@ public class DeviceService {
 
         return device;
     }
-
-    private String hashDeviceSecret(String secret) {
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] encodedHash = digest.digest(secret.getBytes(StandardCharsets.UTF_8));
-            return HexUtils.toHexString(encodedHash);
-        } catch (NoSuchAlgorithmException e) {
-            throw new CryptoException("SHA-256 algorithm not available", e);
-        }
-    }
-
 }

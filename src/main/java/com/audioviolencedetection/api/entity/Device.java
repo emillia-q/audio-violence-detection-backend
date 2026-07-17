@@ -1,15 +1,15 @@
 package com.audioviolencedetection.api.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name = "devices")
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Device {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
