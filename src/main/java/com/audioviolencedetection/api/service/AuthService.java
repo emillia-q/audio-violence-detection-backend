@@ -70,7 +70,7 @@ public class AuthService {
 
     private String generateTokenForUser(User user) {
         SecurityUser securityUser = new SecurityUser(user);
-        return jwtService.generateToken(securityUser, user.getId());
+        return jwtService.generateToken(securityUser, user.getId(), User.class.getSimpleName().toLowerCase());
     }
 
     // Device
