@@ -72,18 +72,18 @@ public class JwtService {
         return (email.equals(userDetails.getUsername()) && !isExpired);
     }
 
-    public Optional<String> getTokenFromRequest(HttpServletRequest request) {
-        final String authHeader = request.getHeader("Authorization");
-        if (authHeader == null || !authHeader.startsWith("Bearer "))
-            return Optional.empty();
-        return Optional.of(authHeader.substring(7));
-    }
-
     private Claims extractAllClaims(String token) {
         return Jwts.parser()
                 .verifyWith(signingKey)
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
+    }
+
+    public Optional<String> getTokenFromRequest(HttpServletRequest request) {
+        final String authHeader = request.getHeader("Authorization");
+        if (authHeader == null || !authHeader.startsWith("Bearer "))
+            return Optional.empty();
+        return Optional.of(authHeader.substring(7));
     }
 }
