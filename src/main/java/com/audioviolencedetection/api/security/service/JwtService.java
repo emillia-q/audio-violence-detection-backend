@@ -29,17 +29,22 @@ public class JwtService {
         this.expirationSeconds = expirationSeconds;
     }
 
+    // User
     public String generateToken(UserDetails userDetails, Long userId) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", userDetails.getAuthorities());
         claims.put("userId", userId);
 
+        return buildToken(claims, userDetails.getUsername());
+    }
+
+    private String buildToken(Map<String, Object> claims, String subject) {
         Instant now = Instant.now();
         Instant expiresAt = now.plusSeconds(expirationSeconds);
 
         return Jwts.builder()
                 .claims(claims)
-                .subject(userDetails.getUsername())
+                .subject(subject)
                 .issuedAt(Date.from(now))
                 .expiration(Date.from(expiresAt))
                 .signWith(signingKey)
