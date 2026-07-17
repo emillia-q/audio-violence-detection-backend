@@ -87,6 +87,6 @@ public class AuthService {
         SecurityDevice securityDevice = new SecurityDevice(device);
         String token = jwtService.generateToken(securityDevice, device.getId(), Device.class.getSimpleName().toLowerCase());
 
-        //long expiresInSeconds =
+        return new DeviceLoginResponse(token);
     }
 }
