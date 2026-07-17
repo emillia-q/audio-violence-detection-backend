@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 @Configuration
 @EnableWebSecurity
@@ -19,6 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final AuthenticationProvider authenticationProvider;
+    private final HandlerExceptionResolver handlerExceptionResolver;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -43,6 +45,12 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/alerts/**").hasRole("DEVICE")
                         // Other endpoints require authentication & role USER
                         .anyRequest().hasRole("USER")
+                )
+                // Forward Security filter chain exceptions to Spring MVC Dispatcher for @RestControllerAdvic
+                .exceptionHandling(exception -> exception
+                        .accessDeniedHandler((request, response, accessDeniedException) ->
+                                handlerExceptionResolver.resolveException(request, response, null, accessDeniedException)
+                        )
                 )
                 // Stateless session (required for JWT)
                 .sessionManagement(session ->
