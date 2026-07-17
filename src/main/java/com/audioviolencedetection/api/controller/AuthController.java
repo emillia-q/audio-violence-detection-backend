@@ -49,6 +49,6 @@ public class AuthController {
     @ApiResponse(responseCode = "400", description = "Invalid request data or validation failed")
     @ApiResponse(responseCode = "401", description = "Invalid MAC address or device secret key")
     public DeviceLoginResponse authenticateDevice(@Valid @RequestBody DeviceLoginRequest request) {
-
+        return authService.authenticateDevice(request);
     }
 }
