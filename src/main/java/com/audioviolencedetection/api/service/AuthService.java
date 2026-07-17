@@ -12,6 +12,7 @@ import com.audioviolencedetection.api.exception.ItemNotFoundException;
 import com.audioviolencedetection.api.exception.ResourceInUseException;
 import com.audioviolencedetection.api.repository.DeviceRepository;
 import com.audioviolencedetection.api.repository.UserRepository;
+import com.audioviolencedetection.api.security.model.SecurityDevice;
 import com.audioviolencedetection.api.security.model.SecurityUser;
 import com.audioviolencedetection.api.security.service.JwtService;
 import com.audioviolencedetection.api.util.CryptoUtils;
@@ -82,5 +83,10 @@ public class AuthService {
         // Check if device secret is the same
         if (!incomingHash.equalsIgnoreCase(device.getDeviceSecret()))
             throw new InvalidDeviceSecretException("Invalid device secret");
+
+        SecurityDevice securityDevice = new SecurityDevice(device);
+        String token = jwtService.generateToken(securityDevice, device.getId(), Device.class.getSimpleName().toLowerCase());
+
+        //long expiresInSeconds =
     }
 }
