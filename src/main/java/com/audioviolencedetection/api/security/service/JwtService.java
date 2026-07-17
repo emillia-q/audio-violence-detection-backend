@@ -58,6 +58,14 @@ public class JwtService {
         return extractAllClaims(token).getSubject();
     }
 
+    public String extractUserType(String token) {
+        return extractAllClaims(token).get("userType", String.class);
+    }
+
+    public Long extractDeviceId(String token) {
+        return extractAllClaims(token).get("deviceId", Long.class);
+    }
+
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String email = extractUsername(token);
         boolean isExpired = extractAllClaims(token).getExpiration().before(new Date());
