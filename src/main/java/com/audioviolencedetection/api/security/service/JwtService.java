@@ -35,7 +35,8 @@ public class JwtService {
                 .map(GrantedAuthority::getAuthority)
                 .toList();
         claims.put("role", roles);
-        claims.put(className + "Id", userId);
+        claims.put("userType", className.toLowerCase());
+        claims.put(className.toLowerCase() + "Id", userId);
 
         return buildToken(claims, userDetails.getUsername());
     }
