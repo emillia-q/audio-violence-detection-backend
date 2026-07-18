@@ -2,6 +2,8 @@ package com.audioviolencedetection.api.service;
 
 import com.audioviolencedetection.api.entity.Alert;
 import com.audioviolencedetection.api.entity.Device;
+import com.audioviolencedetection.api.entity.Notification;
+import com.audioviolencedetection.api.entity.User;
 import com.audioviolencedetection.api.exception.ItemNotFoundException;
 import com.audioviolencedetection.api.repository.AlertRepository;
 import com.audioviolencedetection.api.repository.DeviceRepository;
@@ -28,6 +30,12 @@ public class AlertService {
                 .build();
         alertRepository.save(alert);
 
-
+        // Create & save notification for each trusted user
+        User protectedUser = device.getUser();
+        protectedUser.getTrustedRelations().forEach(
+                trusted -> Notification.builder()
+                        .trustedUser(trusted.getTrustedUser())
+                        .alert(alert)
+        );
     }
 }
