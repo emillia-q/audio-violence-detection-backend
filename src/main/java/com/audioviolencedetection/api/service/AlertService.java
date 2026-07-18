@@ -4,6 +4,7 @@ import com.audioviolencedetection.api.entity.Alert;
 import com.audioviolencedetection.api.entity.Device;
 import com.audioviolencedetection.api.entity.Notification;
 import com.audioviolencedetection.api.entity.User;
+import com.audioviolencedetection.api.exception.BadRequestException;
 import com.audioviolencedetection.api.exception.ItemNotFoundException;
 import com.audioviolencedetection.api.repository.AlertRepository;
 import com.audioviolencedetection.api.repository.DeviceRepository;
@@ -11,6 +12,8 @@ import com.audioviolencedetection.api.repository.NotificationRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -24,19 +27,26 @@ public class AlertService {
         Device device = deviceRepository.findById(deviceId)
                 .orElseThrow(() -> ItemNotFoundException.createForId(Device.class, deviceId));
 
+        User protectedUser = device.getUser();
+        if (protectedUser == null)
+            throw new BadRequestException("Device is not assigned to a user");
+
         // Create & save alert
         Alert alert = Alert.builder()
                 .device(device)
                 .build();
-        alertRepository.save(alert);
+        Alert savedAlert = alertRepository.save(alert);
 
         // Create & save notification for each trusted user
-        User protectedUser = device.getUser();
-        protectedUser.getTrustedRelations().forEach(
-                trusted -> Notification.builder()
-                        .trustedUser(trusted.getTrustedUser())
-                        .alert(alert)
-                        .build()
-        );
+        List<Notification> notifications = protectedUser.getTrustedRelations().stream()
+                .map(relation -> Notification.builder()
+                        .trustedUser(relation.getTrustedUser())
+                        .alert(savedAlert)
+                        .build())
+                .toList();
+
+        // Save whole list at once
+        if (!notifications.isEmpty())
+            notificationRepository.saveAll(notifications);
     }
 }
