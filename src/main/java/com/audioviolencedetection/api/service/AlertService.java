@@ -6,6 +6,7 @@ import com.audioviolencedetection.api.entity.Notification;
 import com.audioviolencedetection.api.entity.User;
 import com.audioviolencedetection.api.exception.BadRequestException;
 import com.audioviolencedetection.api.exception.ItemNotFoundException;
+import com.audioviolencedetection.api.exception.UnprocessableEntityException;
 import com.audioviolencedetection.api.repository.AlertRepository;
 import com.audioviolencedetection.api.repository.DeviceRepository;
 import com.audioviolencedetection.api.repository.NotificationRepository;
@@ -29,7 +30,7 @@ public class AlertService {
 
         User protectedUser = device.getUser();
         if (protectedUser == null)
-            throw new BadRequestException("Device is not assigned to a user");
+            throw new UnprocessableEntityException("Device must be activated and paired with a user before sending alerts");
 
         // Create & save alert
         Alert alert = Alert.builder()
