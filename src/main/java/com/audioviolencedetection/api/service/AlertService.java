@@ -36,6 +36,7 @@ public class AlertService {
                 trusted -> Notification.builder()
                         .trustedUser(trusted.getTrustedUser())
                         .alert(alert)
+                        .build()
         );
     }
 }
