@@ -64,6 +64,12 @@ public class GlobalExceptionHandler {
         return buildResponse(HttpStatus.CONFLICT, ex.getMessage());
     }
 
+    // 422
+    @ExceptionHandler(UnprocessableEntityException.class)
+    public ResponseEntity<ErrorResponse> handleUnprocessableEntityException(UnprocessableEntityException ex) {
+        return buildResponse(HttpStatus.UNPROCESSABLE_CONTENT, ex.getMessage());
+    }
+
     // From Spring
     // 400, DTO field validation
     @ExceptionHandler(MethodArgumentNotValidException.class)

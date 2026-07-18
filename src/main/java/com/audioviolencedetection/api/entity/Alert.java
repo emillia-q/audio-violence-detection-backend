@@ -1,11 +1,17 @@
 package com.audioviolencedetection.api.entity;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.time.OffsetDateTime;
 
 @Entity
 @Table(name = "alerts")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Alert {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
