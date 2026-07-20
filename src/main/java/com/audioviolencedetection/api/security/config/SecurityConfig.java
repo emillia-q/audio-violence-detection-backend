@@ -1,6 +1,7 @@
 package com.audioviolencedetection.api.security.config;
 
 import com.audioviolencedetection.api.security.filter.JwtAuthenticationFilter;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -50,6 +51,9 @@ public class SecurityConfig {
                 .exceptionHandling(exception -> exception
                         .accessDeniedHandler((request, response, accessDeniedException) ->
                                 handlerExceptionResolver.resolveException(request, response, null, accessDeniedException)
+                        )
+                        .authenticationEntryPoint((request, response, authException) ->
+                                handlerExceptionResolver.resolveException(request, response, null, authException)
                         )
                 )
                 // Stateless session (required for JWT)
