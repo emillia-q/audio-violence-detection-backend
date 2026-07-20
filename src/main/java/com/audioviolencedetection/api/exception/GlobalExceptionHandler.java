@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -38,6 +39,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidDeviceSecretException.class)
     public ResponseEntity<ErrorResponse> handleInvalidDeviceSecretException(InvalidDeviceSecretException ex) {
         return buildResponse(HttpStatus.UNAUTHORIZED, ex.getMessage());
+    }
+
+    // 401 - missing or invalid token
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ErrorResponse> handleAuthenticationException(AuthenticationException ex) {
+        return buildResponse(HttpStatus.UNAUTHORIZED, "Unauthorized: Missing or invalid token");
     }
 
     // Business logic
