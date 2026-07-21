@@ -1,15 +1,21 @@
 package com.audioviolencedetection.api.controller;
 
+import com.audioviolencedetection.api.dto.response.AlertListResponse;
 import com.audioviolencedetection.api.security.model.SecurityDevice;
+import com.audioviolencedetection.api.security.model.SecurityUser;
 import com.audioviolencedetection.api.service.AlertService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api/v1/alerts")
@@ -18,6 +24,15 @@ import org.springframework.web.bind.annotation.*;
 public class AlertController {
 
     private final AlertService alertService;
+
+    @GetMapping
+    @PreAuthorize("hasRole('USER')")
+    @Operation(summary = "Returns the list of alerts created by users device")
+    @ApiResponse(responseCode = "200", description = "Returns the list of alerts")
+    @ApiResponse(responseCode = "204", description = "List of alerts is empty")
+    public ResponseEntity<List<AlertListResponse>> getListOfAlerts(@AuthenticationPrincipal SecurityUser securityUser) {
+
+    }
 
     @PostMapping
     @PreAuthorize("hasRole('DEVICE')")
