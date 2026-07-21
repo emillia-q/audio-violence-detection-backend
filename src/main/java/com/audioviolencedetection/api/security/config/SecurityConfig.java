@@ -42,8 +42,6 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/swagger-ui.html"
                         ).permitAll()
-                        // Device can only send alerts
-                        .requestMatchers("/api/v1/alerts/**").hasRole("DEVICE")
                         // Other endpoints require authentication & role USER
                         .anyRequest().hasRole("USER")
                 )
