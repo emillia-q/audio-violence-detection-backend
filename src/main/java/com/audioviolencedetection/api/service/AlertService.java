@@ -1,5 +1,6 @@
 package com.audioviolencedetection.api.service;
 
+import com.audioviolencedetection.api.dto.response.AlertListResponse;
 import com.audioviolencedetection.api.entity.Alert;
 import com.audioviolencedetection.api.entity.Device;
 import com.audioviolencedetection.api.entity.Notification;
@@ -7,6 +8,7 @@ import com.audioviolencedetection.api.entity.User;
 import com.audioviolencedetection.api.exception.BadRequestException;
 import com.audioviolencedetection.api.exception.ItemNotFoundException;
 import com.audioviolencedetection.api.exception.UnprocessableEntityException;
+import com.audioviolencedetection.api.mapper.AlertMapper;
 import com.audioviolencedetection.api.repository.AlertRepository;
 import com.audioviolencedetection.api.repository.DeviceRepository;
 import com.audioviolencedetection.api.repository.NotificationRepository;
@@ -22,6 +24,13 @@ public class AlertService {
     private final AlertRepository alertRepository;
     private final NotificationRepository notificationRepository;
     private final DeviceRepository deviceRepository;
+    private final AlertMapper alertMapper;
+
+    public List<AlertListResponse> getListOfAlerts(Long userId) {
+        return alertRepository.findAllByUserId(userId).stream()
+                .map(alertMapper::toAlertListResponse)
+                .toList();
+    }
 
     @Transactional
     public void sendAlertToDatabase(Long deviceId) {
