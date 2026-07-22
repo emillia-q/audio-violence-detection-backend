@@ -106,7 +106,9 @@ public class UserService {
 
     // Protected Users
     public List<ProtectedUserListResponse> getListOfProtectedUsers(Long trustedUserId) {
-        return userRelationshipRepository.findProtectedUsersByUserId(trustedUserId);
+        return userRelationshipRepository.findProtectedUsersByUserId(trustedUserId).stream()
+                .map(userRelationshipMapper::toProtectedUserListResponse)
+                .toList();
     }
 
     public ProtectedUserDetailsResponse getProtectedUser(Long trustedUserId, Long protectedUserId) {
