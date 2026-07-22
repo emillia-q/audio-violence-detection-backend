@@ -48,7 +48,12 @@ public class AlertController {
     @ApiResponse(responseCode = "200", description = "Returns the list of alerts")
     @ApiResponse(responseCode = "204", description = "List of alerts is empty")
     public ResponseEntity<List<AlertProtectedUsersListResponse>> getListOfProtectedUsersAlerts(@AuthenticationPrincipal SecurityUser securityUser) {
+        List<AlertProtectedUsersListResponse> alerts = alertService.getListOfProtectedUsersAlerts(securityUser.getId());
 
+        if (alerts.isEmpty())
+            return ResponseEntity.noContent().build();
+
+        return ResponseEntity.ok(alerts);
     }
 
     @PostMapping
