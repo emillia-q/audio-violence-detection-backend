@@ -25,6 +25,7 @@ public class AlertController {
 
     private final AlertService alertService;
 
+    // Alerts from my devices
     @GetMapping
     @PreAuthorize("hasRole('USER')")
     @Operation(summary = "Returns the list of alerts created by users device")
@@ -37,6 +38,16 @@ public class AlertController {
             return ResponseEntity.noContent().build();
 
         return ResponseEntity.ok(alerts);
+    }
+
+    // Alerts from my protected users devices
+    @GetMapping("/protected-users")
+    @PreAuthorize("hasRole('USER')")
+    @Operation(summary = "Returns the list of alerts from all protected users devices")
+    @ApiResponse(responseCode = "200", description = "Returns the list of alerts")
+    @ApiResponse(responseCode = "204", description = "List of alerts is empty")
+    public ResponseEntity<List<>> getListOfProtectedUsersAlerts(@AuthenticationPrincipal SecurityUser securityUser) {
+
     }
 
     @PostMapping
