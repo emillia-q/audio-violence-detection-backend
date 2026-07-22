@@ -1,6 +1,7 @@
 package com.audioviolencedetection.api.controller;
 
 import com.audioviolencedetection.api.dto.response.AlertListResponse;
+import com.audioviolencedetection.api.dto.response.AlertProtectedUsersListResponse;
 import com.audioviolencedetection.api.security.model.SecurityDevice;
 import com.audioviolencedetection.api.security.model.SecurityUser;
 import com.audioviolencedetection.api.service.AlertService;
@@ -25,6 +26,7 @@ public class AlertController {
 
     private final AlertService alertService;
 
+    // Alerts from my devices
     @GetMapping
     @PreAuthorize("hasRole('USER')")
     @Operation(summary = "Returns the list of alerts created by users device")
@@ -32,6 +34,21 @@ public class AlertController {
     @ApiResponse(responseCode = "204", description = "List of alerts is empty")
     public ResponseEntity<List<AlertListResponse>> getListOfAlerts(@AuthenticationPrincipal SecurityUser securityUser) {
         List<AlertListResponse> alerts = alertService.getListOfAlerts(securityUser.getId());
+
+        if (alerts.isEmpty())
+            return ResponseEntity.noContent().build();
+
+        return ResponseEntity.ok(alerts);
+    }
+
+    // Alerts from my protected users devices
+    @GetMapping("/protected-users")
+    @PreAuthorize("hasRole('USER')")
+    @Operation(summary = "Returns the list of alerts from all protected users devices")
+    @ApiResponse(responseCode = "200", description = "Returns the list of alerts")
+    @ApiResponse(responseCode = "204", description = "List of alerts is empty")
+    public ResponseEntity<List<AlertProtectedUsersListResponse>> getListOfProtectedUsersAlerts(@AuthenticationPrincipal SecurityUser securityUser) {
+        List<AlertProtectedUsersListResponse> alerts = alertService.getListOfProtectedUsersAlerts(securityUser.getId());
 
         if (alerts.isEmpty())
             return ResponseEntity.noContent().build();
