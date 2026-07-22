@@ -1,8 +1,8 @@
 package com.audioviolencedetection.api.repository;
 
-import com.audioviolencedetection.api.dto.response.ProtectedUserListResponse;
 import com.audioviolencedetection.api.entity.UserRelationship;
 import com.audioviolencedetection.api.entity.UserRelationshipId;
+import com.audioviolencedetection.api.repository.projection.ProtectedUserListProjection;
 import com.audioviolencedetection.api.repository.projection.TrustedUserListProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -18,11 +18,8 @@ public interface UserRelationshipRepository extends JpaRepository<UserRelationsh
             "where r.user.id = :userId")
     List<TrustedUserListProjection> findTrustedUsersByUserId(Long userId);
 
-    @Query("select new com.audioviolencedetection.api.dto.response.ProtectedUserListResponse(" +
-            "r.user.id, " +
-            "r.nicknameForSupervised" +
-            ") " +
+    @Query("select r.user.id as protectedUserId, r.nicknameForSupervised as protectedUserNickname " +
             "from UserRelationship r " +
             "where r.trustedUser.id = :userId")
-    List<ProtectedUserListResponse> findProtectedUsersByUserId(Long userId);
+    List<ProtectedUserListProjection> findProtectedUsersByUserId(Long userId);
 }
