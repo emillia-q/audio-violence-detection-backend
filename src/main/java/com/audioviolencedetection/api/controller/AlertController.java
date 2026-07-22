@@ -1,6 +1,7 @@
 package com.audioviolencedetection.api.controller;
 
 import com.audioviolencedetection.api.dto.response.AlertListResponse;
+import com.audioviolencedetection.api.dto.response.AlertProtectedUsersListResponse;
 import com.audioviolencedetection.api.security.model.SecurityDevice;
 import com.audioviolencedetection.api.security.model.SecurityUser;
 import com.audioviolencedetection.api.service.AlertService;
@@ -46,7 +47,7 @@ public class AlertController {
     @Operation(summary = "Returns the list of alerts from all protected users devices")
     @ApiResponse(responseCode = "200", description = "Returns the list of alerts")
     @ApiResponse(responseCode = "204", description = "List of alerts is empty")
-    public ResponseEntity<List<>> getListOfProtectedUsersAlerts(@AuthenticationPrincipal SecurityUser securityUser) {
+    public ResponseEntity<List<AlertProtectedUsersListResponse>> getListOfProtectedUsersAlerts(@AuthenticationPrincipal SecurityUser securityUser) {
 
     }
 
