@@ -13,6 +13,7 @@ import com.audioviolencedetection.api.exception.BadRequestException;
 import com.audioviolencedetection.api.exception.ItemNotFoundException;
 import com.audioviolencedetection.api.exception.RelationshipNotFoundException;
 import com.audioviolencedetection.api.exception.ResourceInUseException;
+import com.audioviolencedetection.api.mapper.UserRelationshipMapper;
 import com.audioviolencedetection.api.repository.UserRelationshipRepository;
 import com.audioviolencedetection.api.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -28,10 +29,13 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserRelationshipRepository userRelationshipRepository;
+    private final UserRelationshipMapper userRelationshipMapper;
 
     // Trusted Users
     public List<TrustedUserListResponse> getListOfTrustedUsers(Long protectedUserId) {
-        return userRelationshipRepository.findTrustedUsersByUserId(protectedUserId);
+        return userRelationshipRepository.findTrustedUsersByUserId(protectedUserId).stream()
+                .map(userRelationshipMapper::toTrustedUserListResponse)
+                .toList();
     }
 
     public TrustedUserDetailsResponse getTrustedUser(Long protectedUserId, Long trustedUserId) {
