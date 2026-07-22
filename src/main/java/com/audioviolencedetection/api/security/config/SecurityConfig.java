@@ -43,7 +43,7 @@ public class SecurityConfig {
                                 "/swagger-ui.html"
                         ).permitAll()
                         // Other endpoints require authentication & role USER
-                        .anyRequest().hasRole("USER")
+                        .anyRequest().authenticated()
                 )
                 // Forward Security filter chain exceptions to Spring MVC Dispatcher for @RestControllerAdvic
                 .exceptionHandling(exception -> exception
