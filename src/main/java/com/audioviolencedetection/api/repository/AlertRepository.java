@@ -1,6 +1,7 @@
 package com.audioviolencedetection.api.repository;
 
 import com.audioviolencedetection.api.entity.Alert;
+import com.audioviolencedetection.api.repository.projection.AlertProjection;
 import com.audioviolencedetection.api.repository.projection.AlertProtectedUserProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -11,11 +12,11 @@ import java.util.List;
 @Repository
 public interface AlertRepository extends JpaRepository<Alert, Long> {
 
-    @Query("select a " +
+    @Query("select a.id as id, a.device.name as deviceName, a.createdAt as createdAt " +
             "from Alert a " +
             "where a.device.user.id = :userId " +
             "order by a.createdAt desc")
-    List<Alert> findAllByUserId(Long userId);
+    List<AlertProjection> findAllByUserId(Long userId);
 
     @Query("select a.id as alertId, r.user.id as protectedUserId, r.nicknameForSupervised as protectedUserNickname, " +
             "d.name as deviceName, a.createdAt as createdAt " +
