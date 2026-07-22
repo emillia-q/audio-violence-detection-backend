@@ -35,16 +35,8 @@ public class AlertService {
     }
 
     public List<AlertProtectedUsersListResponse> getListOfProtectedUsersAlerts(Long userId) {
-        List<AlertProtectedUserProjection> projections = alertRepository.findProtectedUsersAlerts(userId);
-
-        return projections.stream()
-                .map(proj -> new AlertProtectedUsersListResponse(
-                        proj.getAlertId(),
-                        proj.getProtectedUserId(),
-                        proj.getProtectedUserNickname(),
-                        proj.getDeviceName(),
-                        proj.getCreatedAt()
-                ))
+        return alertRepository.findProtectedUsersAlerts(userId).stream()
+                .map(alertMapper::toProtectedUsersAlertListResponse)
                 .toList();
     }
 
