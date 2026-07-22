@@ -2,7 +2,6 @@ package com.audioviolencedetection.api.mapper;
 
 import com.audioviolencedetection.api.dto.response.AlertListResponse;
 import com.audioviolencedetection.api.dto.response.AlertProtectedUsersListResponse;
-import com.audioviolencedetection.api.entity.Alert;
 import com.audioviolencedetection.api.repository.projection.AlertProjection;
 import com.audioviolencedetection.api.repository.projection.AlertProtectedUserProjection;
 import org.springframework.stereotype.Component;
