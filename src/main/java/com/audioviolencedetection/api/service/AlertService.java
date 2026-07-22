@@ -1,6 +1,7 @@
 package com.audioviolencedetection.api.service;
 
 import com.audioviolencedetection.api.dto.response.AlertListResponse;
+import com.audioviolencedetection.api.dto.response.AlertProtectedUsersListResponse;
 import com.audioviolencedetection.api.entity.Alert;
 import com.audioviolencedetection.api.entity.Device;
 import com.audioviolencedetection.api.entity.Notification;
@@ -12,6 +13,7 @@ import com.audioviolencedetection.api.mapper.AlertMapper;
 import com.audioviolencedetection.api.repository.AlertRepository;
 import com.audioviolencedetection.api.repository.DeviceRepository;
 import com.audioviolencedetection.api.repository.NotificationRepository;
+import com.audioviolencedetection.api.repository.projection.AlertProtectedUserProjection;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,6 +31,20 @@ public class AlertService {
     public List<AlertListResponse> getListOfAlerts(Long userId) {
         return alertRepository.findAllByUserId(userId).stream()
                 .map(alertMapper::toAlertListResponse)
+                .toList();
+    }
+
+    public List<AlertProtectedUsersListResponse> getListOfProtectedUsersAlerts(Long userId) {
+        List<AlertProtectedUserProjection> projections = alertRepository.findProtectedUsersAlerts(userId);
+
+        return projections.stream()
+                .map(proj -> new AlertProtectedUsersListResponse(
+                        proj.getAlertId(),
+                        proj.getProtectedUserId(),
+                        proj.getProtectedUserNickname(),
+                        proj.getDeviceName(),
+                        proj.getCreatedAt()
+                ))
                 .toList();
     }
 
