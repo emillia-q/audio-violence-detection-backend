@@ -34,8 +34,6 @@ services:
     restart: always
     ports:
       - "${REDIS_PORT_EXTERNAL}:6379"
-    volumes:
-      - ./mosquitto-config/mosquitto.conf:/mosquitto/config/mosquitto.conf
 
   mosquitto:
     image: eclipse-mosquitto:2
@@ -43,6 +41,22 @@ services:
     restart: always
     ports:
       - "${MQTT_PORT_EXTERNAL}:1883"
+    volumes:
+      - ./mosquitto-config/mosquitto.conf:/mosquitto/config/mosquitto.conf
+
+  kafka:
+    image: redpandadata/redpanda:latest
+    container_name: audio_kafka
+    restart: always
+    ports:
+      - "${KAFKA_PORT_EXTERNAL}:19092"
+    command:
+      - redpanda
+      - start
+      - --smp 1
+      - --memory 1G
+      - --kafka-addr internal://0.0.0.0:9092,external://0.0.0.0:19092
+      - --advertise-kafka-addr internal://kafka:9092,external://localhost:19092
 
 volumes:
   audio_db_data:
