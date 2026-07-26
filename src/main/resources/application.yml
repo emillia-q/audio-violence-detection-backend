@@ -21,6 +21,17 @@ spring:
         format_sql: true
     open-in-view: false
 
+  data:
+    redis:
+      host: localhost
+      port: ${REDIS_PORT_EXTERNAL:6379}
+
+  kafka:
+    bootstrap-servers: localhost:${KAFKA_PORT_EXTERNAL:19092}
+    consumer:
+      group-id: audio-violence-group
+      auto-offset-reset: earliest
+
 server:
   port: ${APP_PORT}
 
@@ -28,3 +39,8 @@ app:
   jwt:
     secret: ${JWT_SECRET}
     expiration-seconds: ${JWT_EXPIRATION_SECONDS:86400}
+
+  mqtt:
+    broker-url: tcp://localhost:${MQTT_PORT_EXTERNAL:1883}
+    client-id: spring-boot-backend-service
+    topic: devices/alerts
