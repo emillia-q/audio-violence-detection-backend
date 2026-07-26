@@ -28,5 +28,12 @@ services:
     depends_on:
       - db
 
+  redis:
+    image: redis:7-alpine
+    container_name: audio_redis
+    restart: always
+    ports:
+      - "${REDIS_PORT_EXTERNAL}:6379"
+
 volumes:
   audio_db_data:
