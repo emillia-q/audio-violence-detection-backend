@@ -38,6 +38,17 @@ public record RegisterRequest(
         )
         String password
 ) {
+    public RegisterRequest {
+        if (firstName != null && !firstName.isBlank())
+            firstName = formatName(firstName);
+
+        if (lastName != null && !lastName.isBlank())
+            lastName = formatName(lastName);
+
+        if (email != null && !email.isBlank())
+            email = email.trim().toLowerCase();
+    }
+
     private static String formatName(String name) {
         String trimmed = name.trim();
         if (trimmed.length() == 1)
