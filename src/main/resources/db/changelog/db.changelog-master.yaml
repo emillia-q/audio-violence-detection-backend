@@ -7,3 +7,5 @@ databaseChangeLog:
       file: db/changelog/changesets/003_upgrade_users_and_relations.sql
   - include:
       file: db/changelog/changesets/004_add_notifications_table.sql
+  - include:
+      file: db/changelog/changesets/005-add-user-names.sql

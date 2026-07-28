@@ -45,7 +45,8 @@ public class UserService {
 
         return new TrustedUserDetailsResponse(
                 relationship.getTrustedUser().getId(),
-                relationship.getTrustedUser().getEmail(),
+                relationship.getTrustedUser().getFirstName(),
+                relationship.getUser().getLastName(),
                 relationship.getNicknameForTrusted()
         );
     }
@@ -81,8 +82,9 @@ public class UserService {
 
         userRelationshipRepository.save(relationship);
         return new TrustedUserDetailsResponse(
-                trustedUser.getId(),
-                trustedUser.getEmail(),
+                relationship.getTrustedUser().getId(),
+                relationship.getTrustedUser().getFirstName(),
+                relationship.getUser().getLastName(),
                 relationship.getNicknameForTrusted()
         );
     }
@@ -99,7 +101,8 @@ public class UserService {
             relationship.setNicknameForTrusted(request.customNickname());
         return new TrustedUserDetailsResponse(
                 relationship.getTrustedUser().getId(),
-                relationship.getTrustedUser().getEmail(),
+                relationship.getTrustedUser().getFirstName(),
+                relationship.getUser().getLastName(),
                 relationship.getNicknameForTrusted()
         );
     }
@@ -118,7 +121,8 @@ public class UserService {
 
         return new ProtectedUserDetailsResponse(
                 relationship.getUser().getId(),
-                relationship.getUser().getEmail(),
+                relationship.getUser().getFirstName(),
+                relationship.getUser().getLastName(),
                 relationship.getNicknameForSupervised()
         );
     }
@@ -135,7 +139,8 @@ public class UserService {
             relationship.setNicknameForSupervised(request.customNickname());
         return new ProtectedUserDetailsResponse(
                 relationship.getUser().getId(),
-                relationship.getUser().getEmail(),
+                relationship.getUser().getFirstName(),
+                relationship.getUser().getLastName(),
                 relationship.getNicknameForSupervised()
         );
     }

@@ -18,7 +18,12 @@ public interface AlertRepository extends JpaRepository<Alert, Long> {
             "order by a.createdAt desc")
     List<AlertProjection> findAllByUserId(Long userId);
 
-    @Query("select a.id as alertId, r.user.id as protectedUserId, r.nicknameForSupervised as protectedUserNickname, " +
+    @Query("select a.id as alertId, r.user.id as protectedUserId, " +
+            "case " +
+            "when r.nicknameForSupervised = 'My Supervised User' " +
+            "then concat(r.user.firstName, ' ', r.user.lastName) " +
+            "else r.nicknameForSupervised " +
+            "end as protectedUserDisplayName, " +
             "d.name as deviceName, a.createdAt as createdAt " +
             "from Alert a " +
             "join a.device d " +

@@ -21,7 +21,7 @@ public class AlertMapper {
         return new AlertProtectedUsersListResponse(
                 proj.getAlertId(),
                 proj.getProtectedUserId(),
-                proj.getProtectedUserNickname(),
+                proj.getProtectedUserDisplayName(),
                 (proj.getDeviceName() != null ? proj.getDeviceName() : "Unnamed Device"),
                 proj.getCreatedAt()
         );
