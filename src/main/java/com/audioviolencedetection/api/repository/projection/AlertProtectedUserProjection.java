@@ -8,7 +8,7 @@ public interface AlertProtectedUserProjection {
 
     Long getProtectedUserId();
 
-    String protectedUserDisplayName();
+    String getProtectedUserDisplayName();
 
     String getDeviceName();
 

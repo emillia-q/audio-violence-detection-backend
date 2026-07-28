@@ -5,7 +5,7 @@ import java.time.OffsetDateTime;
 public record AlertProtectedUsersListResponse(
         Long alertId,
         Long protectedUserId,
-        String protectedUserNickname,
+        String protectedUserDisplayName,
         String deviceName,
         OffsetDateTime createdAt
 ) {
