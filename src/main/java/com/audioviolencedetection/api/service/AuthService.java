@@ -44,7 +44,12 @@ public class AuthService {
         User user = userRepository.findByEmail(request.email()).orElseThrow();
         String token = generateTokenForUser(user);
 
-        return new AuthResponse(token, user.getEmail());
+        return new AuthResponse(
+                token,
+                user.getEmail(),
+                user.getFirstName(),
+                user.getLastName()
+        );
     }
 
     @Transactional
@@ -58,7 +63,12 @@ public class AuthService {
 
         String token = generateTokenForUser(user);
 
-        return new AuthResponse(token, email);
+        return new AuthResponse(
+                token,
+                user.getEmail(),
+                user.getFirstName(),
+                user.getLastName()
+        );
     }
 
     private User createAndSaveUser(RegisterRequest request) {
