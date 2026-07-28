@@ -118,7 +118,8 @@ public class UserService {
 
         return new ProtectedUserDetailsResponse(
                 relationship.getUser().getId(),
-                relationship.getUser().getEmail(),
+                relationship.getUser().getFirstName(),
+                relationship.getUser().getLastName(),
                 relationship.getNicknameForSupervised()
         );
     }
@@ -135,7 +136,8 @@ public class UserService {
             relationship.setNicknameForSupervised(request.customNickname());
         return new ProtectedUserDetailsResponse(
                 relationship.getUser().getId(),
-                relationship.getUser().getEmail(),
+                relationship.getUser().getFirstName(),
+                relationship.getUser().getLastName(),
                 relationship.getNicknameForSupervised()
         );
     }
