@@ -38,4 +38,10 @@ public record RegisterRequest(
         )
         String password
 ) {
+    private static String formatName(String name) {
+        String trimmed = name.trim();
+        if (trimmed.length() == 1)
+            return trimmed.toUpperCase(); // Guard clause
+        return trimmed.substring(0,1).toUpperCase() + trimmed.substring(1).toLowerCase();
+    }
 }
