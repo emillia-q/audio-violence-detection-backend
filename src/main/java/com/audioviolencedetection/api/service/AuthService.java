@@ -73,6 +73,8 @@ public class AuthService {
 
     private User createAndSaveUser(RegisterRequest request) {
         User user = User.builder()
+                .firstName(request.firstName())
+                .lastName(request.lastName())
                 .email(request.email())
                 .password(passwordEncoder.encode(request.password()))
                 .build();
