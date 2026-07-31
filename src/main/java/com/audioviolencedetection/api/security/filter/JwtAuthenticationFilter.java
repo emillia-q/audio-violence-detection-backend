@@ -2,8 +2,8 @@ package com.audioviolencedetection.api.security.filter;
 
 import com.audioviolencedetection.api.entity.Device;
 import com.audioviolencedetection.api.security.model.SecurityDevice;
-import com.audioviolencedetection.api.security.model.SecurityUser;
 import com.audioviolencedetection.api.security.service.JwtService;
+import io.jsonwebtoken.JwtException;
 import jakarta.annotation.Nonnull;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -35,6 +35,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         // Extract and clear the token from Bearer
         jwtService.getTokenFromRequest(request).ifPresent(token -> {
+        try {
             String userName = jwtService.extractUsername(token);
             String userType = jwtService.extractUserType(token);
 
@@ -70,6 +71,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                 }
             }
+        } catch (JwtException e) {
+            SecurityContextHolder.clearContext();
+        }
         });
         // Despite result, pass the request
         filterChain.doFilter(request, response);
