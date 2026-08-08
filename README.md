@@ -29,26 +29,15 @@ The project does **not** aim to replace emergency services, professional support
 
 This repository is the backend part of the four-component system. The remaining components are listed below.
 
-| Component                    | Role                                                        | Repository                                                                       |
-|------------------------------|-------------------------------------------------------------|----------------------------------------------------------------------------------|
-| **Backend API**              | Secure API, device lifecycle, alerts and user relationships | [This repository](https://github.com/emillia-q/audio-violence-detection-backend) |
-| **TinyML model**             | On-device audio violence classification                     | **[Add TinyML repository link here]**                                            |
-| **IoT hardware / firmware**  | Edge device that runs the model and sends alerts            | **[Add IoT repository link here]**                                               |
-| **React Native application** | Mobile experience for protected and trusted users           | **[Add mobile-app repository link here]**                                        |
+| Component                    | Role                                                        | Repository                                                                   |
+|------------------------------|-------------------------------------------------------------|------------------------------------------------------------------------------|
+| **Backend API**              | Secure API, device lifecycle, alerts and user relationships | [Backend](https://github.com/emillia-q/audio-violence-detection-backend)     |
+| **TinyML model**             | On-device audio violence classification                     | [TinyML](https://github.com/emillia-q/audio-violence-detection-tinyml)       |
+| **IoT hardware**  | Edge device that runs the model and sends alerts            | [IoT device](https://github.com/emillia-q/audio-violence-detection-hardware) |
+| **React Native application** | Mobile experience for protected and trusted users           | [Mobile app](https://github.com/emillia-q/audio-violence-detection-mobile)   |
 
 ## 🔄 System flow
-
-```text
-TinyML model --> IoT device --> Backend API --> React Native app
-                  classification   JWT alert    alerts, devices,
-                   at the edge                   trusted contacts
-                                      |
-                                      v
-                                 PostgreSQL
-```
-
-> **SCREENSHOT TO ADD:** a clean architecture diagram showing the four thesis components and the alert path: TinyML →
-> IoT device → Backend → mobile app.
+![System flow](assets/system_flow.png)
 
 ## 📱 API preview
 
