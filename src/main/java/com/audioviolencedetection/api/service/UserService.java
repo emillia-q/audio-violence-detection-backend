@@ -14,6 +14,7 @@ import com.audioviolencedetection.api.exception.ItemNotFoundException;
 import com.audioviolencedetection.api.exception.RelationshipNotFoundException;
 import com.audioviolencedetection.api.exception.ResourceInUseException;
 import com.audioviolencedetection.api.mapper.UserRelationshipMapper;
+import com.audioviolencedetection.api.repository.NotificationRepository;
 import com.audioviolencedetection.api.repository.UserRelationshipRepository;
 import com.audioviolencedetection.api.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -21,7 +22,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +29,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserRelationshipRepository userRelationshipRepository;
+    private final NotificationRepository notificationRepository;
     private final UserRelationshipMapper userRelationshipMapper;
 
     // Trusted Users
@@ -152,6 +153,10 @@ public class UserService {
         if (!userRelationshipRepository.existsById(relationshipId))
             throw new RelationshipNotFoundException("Trusted user relationship not found");
 
+        // Delete trusted user notifications from protected user devices
+        notificationRepository.deleteByTrustedUserAndDeviceOwner(protectedUserId, trustedUserId);
+
+        // Delete relationship
         userRelationshipRepository.deleteById(relationshipId);
     }
 }
