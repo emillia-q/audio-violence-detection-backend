@@ -14,6 +14,7 @@
 > implemented. Planned work includes Kafka-based event processing and IoT communication over MQTT.
 
 ## 🧩 Engineering thesis project
+
 This is my engineering-thesis project aimed at supporting people affected by domestic violence. Its goal is to turn an
 on-device audio-classification result into a secure, actionable alert that can reach trusted people when it matters.
 The TinyML model runs in an edge-computing architecture on a microcontroller, so audio is evaluated directly on the IoT
@@ -34,7 +35,6 @@ This repository is the backend part of the four-component system. The remaining 
 | **TinyML model**             | On-device audio violence classification                     | **[Add TinyML repository link here]**                                            |
 | **IoT hardware / firmware**  | Edge device that runs the model and sends alerts            | **[Add IoT repository link here]**                                               |
 | **React Native application** | Mobile experience for protected and trusted users           | **[Add mobile-app repository link here]**                                        |
-
 
 ## 🔄 System flow
 
@@ -58,7 +58,7 @@ The API is documented with Swagger UI and includes JWT Bearer authentication sup
 
 > **SCREENSHOT TO ADD:** a Swagger or Postman example of a successful device activation or `POST /api/v1/alerts` request
 > authenticated as a device.
- 
+
 ## 🏗️ Architecture highlights
 
 - **User authentication:** registration and login with BCrypt-protected passwords and stateless JWT sessions.
