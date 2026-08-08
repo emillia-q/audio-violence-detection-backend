@@ -66,7 +66,6 @@ public class AlertService {
                 .toList();
 
         // Save whole list at once
-        if (!notifications.isEmpty())
-            notificationRepository.saveAll(notifications);
+        notificationRepository.saveAll(notifications);
     }
 }
