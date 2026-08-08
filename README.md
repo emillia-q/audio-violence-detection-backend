@@ -1,4 +1,4 @@
-# SafeHome — Audio Violence Detection Backend
+# Audio Violence Detection
 
 <p align="center">
   <a href="https://www.java.com/"><img src="https://img.shields.io/badge/Java-21-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white" alt="Java 21"></a>
@@ -9,33 +9,59 @@
   <a href="https://swagger.io/"><img src="https://img.shields.io/badge/OpenAPI-Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=black" alt="OpenAPI / Swagger"></a>
 </p>
 
-> [!WARNING]
-> **Project in active development.** The core REST API, authentication, device provisioning and alert flow are implemented. The system is being extended as part of an engineering thesis.
+> [!IMPORTANT]
+> **Project in active development.** The core REST API, authentication, device provisioning and alert flow are
+> implemented. Planned work includes Kafka-based event processing and IoT communication over MQTT.
 
-SafeHome is the backend of an IoT safety platform that turns an on-device audio-classification result into a secure, actionable alert. It manages users, pre-provisioned devices, trusted contacts and the alert history behind the mobile application.
+This is my engineering-thesis project aimed at supporting people affected by domestic violence. The goal is to turn an
+on-device audio-classification result into a secure, actionable alert that can reach the right people when it matters.
 
-## Engineering thesis ecosystem
+This repository contains the **backend API**: the part responsible for secure identities, device pairing, alert delivery
+and the safety network around a user. It is designed as one piece of a complete system rather than as an isolated CRUD
+application.
 
-This repository is one of four complementary parts of my engineering thesis. Together, they form an end-to-end system: audio is classified at the edge, an IoT device reports a detected threat, this API coordinates the data and security layer, and the mobile app presents alerts to users.
+## 🧩 Engineering thesis project
 
-| Component | Role | Repository |
-| --- | --- | --- |
-| **Backend API** | Secure API, device lifecycle, alerts and user relationships | [This repository](https://github.com/emillia-q/audio-violence-detection-backend) |
-| **TinyML model** | On-device audio violence classification | **[Add TinyML repository link here]** |
-| **IoT hardware / firmware** | Edge device that runs the model and sends alerts | **[Add IoT repository link here]** |
-| **React Native application** | Mobile experience for protected and trusted users | **[Add mobile-app repository link here]** |
+This repository is one of four complementary parts of my engineering thesis. Together, they form an end-to-end system:
+audio is classified at the edge, an IoT device reports a detected threat, this API coordinates the data and security
+layer, and the mobile app presents alerts to users.
 
-## What it does today
+| Component                    | Role                                                        | Repository                                                                       |
+|------------------------------|-------------------------------------------------------------|----------------------------------------------------------------------------------|
+| **Backend API**              | Secure API, device lifecycle, alerts and user relationships | [This repository](https://github.com/emillia-q/audio-violence-detection-backend) |
+| **TinyML model**             | On-device audio violence classification                     | **[Add TinyML repository link here]**                                            |
+| **IoT hardware / firmware**  | Edge device that runs the model and sends alerts            | **[Add IoT repository link here]**                                               |
+| **React Native application** | Mobile experience for protected and trusted users           | **[Add mobile-app repository link here]**                                        |
+
+## 💛 Why this system matters
+
+Domestic violence can isolate people from the support they need. SafeHome explores how discreet edge AI and connected
+devices could help shorten the path between detecting a dangerous situation and informing a trusted person.
+
+The project does **not** claim to replace emergency services, professional support or human judgement. It is a technical
+exploration of a privacy-conscious safety tool: audio is evaluated on the device, while the backend coordinates only the
+resulting alert, authorised users and trusted contacts.
+
+> **SCREENSHOT TO ADD:** a photo or clean render of the IoT prototype in its intended environment. Keep the image human
+> and tangible rather than overly technical.
+
+## ✨ What the API does today
 
 - **User authentication:** registration and login with BCrypt-protected passwords and stateless JWT sessions.
-- **Secure device onboarding:** factory-provisioned devices are paired using their MAC address and a hashed device secret; no duplicate device record is created during activation.
-- **Device identity for IoT:** a device can exchange its credentials for a time-limited JWT and use it to submit an alert with the `DEVICE` role.
-- **Safety network:** users can create trusted-user relationships, personalise contact names and view people for whom they provide care.
-- **Alert fan-out:** an alert generated by a paired device is persisted and creates notifications for the protected user and their trusted contacts.
-- **Privacy-aware access rules:** unauthorised access to someone else's device is deliberately returned as `404 Not Found`, reducing resource-enumeration risk.
-- **Predictable API contract:** request validation and centralized exception handling produce consistent JSON error responses.
+- **Secure device onboarding:** factory-provisioned devices are paired using their MAC address and a hashed device
+  secret; no duplicate device record is created during activation.
+- **Device identity for IoT:** a device can exchange its credentials for a time-limited JWT and use it to submit an
+  alert with the `DEVICE` role.
+- **Safety network:** users can create trusted-user relationships, personalise contact names and view people for whom
+  they provide care.
+- **Alert fan-out:** an alert generated by a paired device is persisted and creates notifications for the protected user
+  and their trusted contacts.
+- **Privacy-aware access rules:** unauthorised access to someone else's device is deliberately returned as
+  `404 Not Found`, reducing resource-enumeration risk.
+- **Predictable API contract:** request validation and centralized exception handling produce consistent JSON error
+  responses.
 
-## System flow
+## 🔄 System flow
 
 ```text
 TinyML model --> IoT device --> Backend API --> React Native app
@@ -46,84 +72,31 @@ TinyML model --> IoT device --> Backend API --> React Native app
                                  PostgreSQL
 ```
 
-> **SCREENSHOT TO ADD:** a clean architecture diagram showing the four thesis components and the alert path: TinyML → IoT device → Backend → mobile app.
+> **SCREENSHOT TO ADD:** a clean architecture diagram showing the four thesis components and the alert path: TinyML →
+> IoT device → Backend → mobile app.
 
-## API preview
+## 📱 API preview
 
 The API is documented with Swagger UI and includes JWT Bearer authentication support for protected endpoints.
 
 > **SCREENSHOT TO ADD:** Swagger UI overview with the `Auth`, `Devices`, `Alerts` and `Users` endpoint groups visible.
 
-> **SCREENSHOT TO ADD:** a Swagger or Postman example of a successful device activation or `POST /api/v1/alerts` request authenticated as a device.
+> **SCREENSHOT TO ADD:** a Swagger or Postman example of a successful device activation or `POST /api/v1/alerts` request
+> authenticated as a device.
 
-## Architecture highlights
+## 🏗️ Architecture highlights
 
-- **Layered design:** controllers, services, repositories, DTOs, mappers and domain entities have separate responsibilities; persistence entities are not returned directly by the API.
-- **Versioned schema:** Liquibase migrations create and evolve the PostgreSQL schema; Hibernate runs in `validate` mode to catch schema drift.
-- **Role separation:** endpoint authorization distinguishes human users (`USER`) from physical devices (`DEVICE`). Missing/invalid credentials return `401`; an authenticated principal lacking a required role receives `403`.
-- **Secure error handling:** a global exception layer standardizes validation, business and security failures without exposing internal implementation details.
-- **Efficient read models:** repository projections are used for selected list queries to return only the fields needed by clients.
+- **Layered design:** controllers, services, repositories, DTOs, mappers and domain entities have separate
+  responsibilities; persistence entities are not returned directly by the API.
+- **Versioned schema:** Liquibase migrations create and evolve the PostgreSQL schema; Hibernate runs in `validate` mode
+  to catch schema drift.
+- **Role separation:** endpoint authorization distinguishes human users (`USER`) from physical devices (`DEVICE`).
+  Missing/invalid credentials return `401`; an authenticated principal lacking a required role receives `403`.
+- **Secure error handling:** a global exception layer standardizes validation, business and security failures without
+  exposing internal implementation details.
+- **Efficient read models:** repository projections are used for selected list queries to return only the fields needed
+  by clients.
 
-## Technology stack
-
-| Area | Technologies |
-| --- | --- |
-| Language & framework | Java 21, Spring Boot 4.1, Spring MVC |
-| Security | Spring Security, JWT (JJWT), BCrypt |
-| Data | PostgreSQL 16, Spring Data JPA / Hibernate, Liquibase |
-| API contract | REST, Jakarta Validation, OpenAPI 3 / Swagger UI |
-| Development environment | Maven Wrapper, Docker Compose, pgAdmin |
-| Code quality | Lombok, Java records for immutable response models |
-
-## Quick start
-
-### Prerequisites
-
-- Java 21
-- Docker Desktop with Docker Compose
-
-### 1. Configure local environment
-
-Create a root `.env` file with the variables used by `docker-compose.yml` and `application.yml`:
-
-```dotenv
-DB_NAME=audio_violence_detection
-DB_USER=your_db_user
-DB_PASSWORD=your_db_password
-DB_PORT_EXTERNAL=5434
-APP_PORT=8080
-PGADMIN_EMAIL=your_email@example.com
-PGADMIN_PASS=your_pgadmin_password
-PGADMIN_PORT_EXTERNAL=5051
-JWT_SECRET=replace_with_a_long_random_secret_at_least_32_characters
-JWT_EXPIRATION_SECONDS=86400
-```
-
-### 2. Start the local database
-
-```powershell
-docker compose up -d db pgadmin
-```
-
-### 3. Run the API
-
-```powershell
-.\mvnw.cmd spring-boot:run
-```
-
-Liquibase will apply the database migrations automatically. Open Swagger UI at [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html).
-
-> **SCREENSHOT TO ADD:** pgAdmin view showing the migrated database tables (`users`, `devices`, `alerts`, `notifications`, `user_relationships`).
-
-## Current scope and next steps
-
-The repository already contains the backbone for the event-driven and IoT communication layers. Their active integration is the next phase; they are intentionally not presented above as current production features.
-
-- Deliver notifications to the mobile client in real time.
-- Integrate IoT messaging and event processing.
-- Complete automated test coverage and CI.
-- Add production deployment configuration, observability and stricter CORS rules.
-
-## Author
+## 👩‍💻 Author
 
 Built by [Emilia Kura](https://github.com/emillia-q) as part of an engineering thesis.
