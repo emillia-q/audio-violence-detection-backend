@@ -48,15 +48,14 @@ public class AlertService {
             throw new UnprocessableEntityException("Device must be activated and paired with a user before sending alerts");
 
         // Create & save alert
-        Alert alert = Alert.builder()
+        Alert savedAlert = alertRepository.save(Alert.builder()
                 .device(device)
-                .build();
-        Alert savedAlert = alertRepository.save(alert);
+                .build());
 
         // Create & save notification for each trusted user
         List<Notification> notifications = protectedUser.getTrustedRelations().stream()
                 .map(relation -> Notification.builder()
-                        .trustedUser(relation.getTrustedUser())
+                        .user(relation.getTrustedUser())
                         .alert(savedAlert)
                         .build())
                 .toList();
