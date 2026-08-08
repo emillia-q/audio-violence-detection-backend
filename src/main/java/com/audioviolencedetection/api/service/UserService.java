@@ -47,7 +47,7 @@ public class UserService {
         return new TrustedUserDetailsResponse(
                 relationship.getTrustedUser().getId(),
                 relationship.getTrustedUser().getFirstName(),
-                relationship.getUser().getLastName(),
+                relationship.getTrustedUser().getLastName(),
                 relationship.getNicknameForTrusted()
         );
     }
@@ -85,7 +85,7 @@ public class UserService {
         return new TrustedUserDetailsResponse(
                 relationship.getTrustedUser().getId(),
                 relationship.getTrustedUser().getFirstName(),
-                relationship.getUser().getLastName(),
+                relationship.getTrustedUser().getLastName(),
                 relationship.getNicknameForTrusted()
         );
     }
@@ -103,7 +103,7 @@ public class UserService {
         return new TrustedUserDetailsResponse(
                 relationship.getTrustedUser().getId(),
                 relationship.getTrustedUser().getFirstName(),
-                relationship.getUser().getLastName(),
+                relationship.getTrustedUser().getLastName(),
                 relationship.getNicknameForTrusted()
         );
     }
