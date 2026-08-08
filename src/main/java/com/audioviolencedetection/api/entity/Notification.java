@@ -20,7 +20,7 @@ public class Notification {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
-    private User trustedUser;
+    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "alert_id", referencedColumnName = "id", nullable = false)
