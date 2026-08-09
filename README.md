@@ -29,12 +29,12 @@ The project does **not** aim to replace emergency services, professional support
 
 This repository is the backend part of the four-component system. The remaining components are listed below.
 
-| Repository                                                                     | Role                                                        |
-|--------------------------------------------------------------------------------|-------------------------------------------------------------|
-| [Backend API](https://github.com/emillia-q/audio-violence-detection-backend)   | Secure API, device lifecycle, alerts and user relationships |
-| [TinyML model](https://github.com/emillia-q/audio-violence-detection-tinyml)   | On-device audio violence classification                     |
-| [IoT hardware](https://github.com/emillia-q/audio-violence-detection-hardware) | Edge device that runs the model and sends alerts            |
-| [React Native application](https://github.com/emillia-q/audio-violence-detection-mobile) | Mobile experience for protected and trusted users           |
+| Repository | Role |
+|-------|-------|
+| [Backend API](https://github.com/emillia-q/audio-violence-detection-backend) | Secure API, device lifecycle, alerts and user relationships |
+| [TinyML model](https://github.com/emillia-q/audio-violence-detection-tinyml) | On-device audio violence classification |
+| [IoT hardware](https://github.com/emillia-q/audio-violence-detection-hardware) | Edge device that runs the model and sends alerts |
+| [React Native application](https://github.com/emillia-q/audio-violence-detection-mobile) | Mobile experience for protected and trusted users |
 
 ## 🔄 System flow
 ![System flow](assets/system_flow.png)
