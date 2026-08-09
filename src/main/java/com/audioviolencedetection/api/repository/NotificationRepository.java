@@ -10,6 +10,6 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     @Modifying
     @Query("delete from Notification n " +
             "where n.alert.device.user.id = :protectedUserId " +
-            "and n.trustedUser.id = :trustedUserId")
+            "and n.user.id = :trustedUserId")
     void deleteByTrustedUserAndDeviceOwner(Long protectedUserId, Long trustedUserId);
 }
