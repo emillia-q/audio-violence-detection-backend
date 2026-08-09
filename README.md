@@ -16,13 +16,14 @@
 ## 🧩 Engineering thesis project
 
 Domestic violence often happens behind closed doors, where traditional emergency calls are impossible. This engineering
-thesis project aims to change that by providing a discreet, automated safety net.
+thesis project aims to change that by providing a **discreet, automated safety net**.
 
-Instead of relying on manual intervention, the system uses edge-computing (TinyML) on an IoT device to detect signs of
-violence in real-time. When a critical event is classified, this Spring Boot backend acts as the central hub - securely
-routing alerts to a trusted network of guardians, allowing them to react when it matters most.
+Instead of relying on manual intervention, the system uses **edge-computing (TinyML)** on an **IoT device** to **detect
+signs of violence in real-time**. When a critical event is classified, this **Spring Boot backend** acts as the central
+hub - **securely routing alerts** to a **trusted network of guardians**, allowing them to react when it matters most.
 
-⚠️ Note: This system is a proof-of-concept for thesis purposes and does not replace professional emergency services.
+⚠️ *Note: This system is a **proof-of-concept** for thesis purposes
+and **does not replace professional emergency services**.*
 
 ---
 
