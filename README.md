@@ -25,16 +25,16 @@ The project does **not** aim to replace emergency services, professional support
 
 > **SCREENSHOT TO ADD:** a photo or clean render of the IoT prototype in its intended environment.
 
-## 🧩 Engineering thesis project
+---
 
 This repository is the backend part of the four-component system. The remaining components are listed below.
 
-| Component                    | Role                                                        | Repository                                                                   |
-|------------------------------|-------------------------------------------------------------|------------------------------------------------------------------------------|
-| **Backend API**              | Secure API, device lifecycle, alerts and user relationships | [Backend](https://github.com/emillia-q/audio-violence-detection-backend)     |
-| **TinyML model**             | On-device audio violence classification                     | [TinyML](https://github.com/emillia-q/audio-violence-detection-tinyml)       |
-| **IoT hardware**  | Edge device that runs the model and sends alerts            | [IoT device](https://github.com/emillia-q/audio-violence-detection-hardware) |
-| **React Native application** | Mobile experience for protected and trusted users           | [Mobile app](https://github.com/emillia-q/audio-violence-detection-mobile)   |
+| Repository                                                                     | Role                                                        |
+|--------------------------------------------------------------------------------|-------------------------------------------------------------|
+| [Backend API](https://github.com/emillia-q/audio-violence-detection-backend)   | Secure API, device lifecycle, alerts and user relationships |
+| [TinyML model](https://github.com/emillia-q/audio-violence-detection-tinyml)   | On-device audio violence classification                     |
+| [IoT hardware](https://github.com/emillia-q/audio-violence-detection-hardware) | Edge device that runs the model and sends alerts            |
+| [React Native application](https://github.com/emillia-q/audio-violence-detection-mobile) | Mobile experience for protected and trusted users           |
 
 ## 🔄 System flow
 ![System flow](assets/system_flow.png)
