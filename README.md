@@ -42,6 +42,7 @@ This repository is the backend part of the four-component system. The remaining 
 ## 📱 API preview
 
 The API is documented with Swagger UI and includes JWT Bearer authentication support for protected endpoints.
+
 ![Swagger](assets/swagger.png)
 
 ## 🏗️ Architecture highlights
