@@ -23,8 +23,6 @@ the event and distributes notifications to the protected user's trusted contacts
 
 The project does **not** aim to replace emergency services, professional support or human judgement.
 
-> **SCREENSHOT TO ADD:** a photo or clean render of the IoT prototype in its intended environment.
-
 ---
 
 This repository is the backend part of the four-component system. The remaining components are listed below.
