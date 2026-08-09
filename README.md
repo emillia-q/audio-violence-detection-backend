@@ -15,26 +15,28 @@
 
 ## 🧩 Engineering thesis project
 
-This is my engineering-thesis project aimed at supporting people affected by domestic violence. Its goal is to turn an
-on-device audio-classification result into a secure, actionable alert that can reach trusted people when it matters.
-The TinyML model runs in an edge-computing architecture on a microcontroller, so audio is evaluated directly on the IoT
-device. When it detects a possible violent incident, the device creates an alert. The API persists
-the event and distributes notifications to the protected user's trusted contacts, enabling them to react earlier.
+Domestic violence often happens behind closed doors, where traditional emergency calls are impossible. This engineering
+thesis project aims to change that by providing a discreet, automated safety net.
 
-The project does **not** aim to replace emergency services, professional support or human judgement.
+Instead of relying on manual intervention, the system uses edge-computing (TinyML) on an IoT device to detect signs of
+violence in real-time. When a critical event is classified, this Spring Boot backend acts as the central hub - securely
+routing alerts to a trusted network of guardians, allowing them to react when it matters most.
+
+⚠️ Note: This system is a proof-of-concept for thesis purposes and does not replace professional emergency services.
 
 ---
 
 This repository is the backend part of the four-component system. The remaining components are listed below.
 
-| Repository | Role |
-|-------|-------|
-| [Backend API](https://github.com/emillia-q/audio-violence-detection-backend) | Secure API, device lifecycle, alerts and user relationships |
-| [TinyML model](https://github.com/emillia-q/audio-violence-detection-tinyml) | On-device audio violence classification |
-| [IoT hardware](https://github.com/emillia-q/audio-violence-detection-hardware) | Edge device that runs the model and sends alerts |
-| [React Native application](https://github.com/emillia-q/audio-violence-detection-mobile) | Mobile experience for protected and trusted users |
+| Repository                                                                               | Role                                                        |
+|------------------------------------------------------------------------------------------|-------------------------------------------------------------|
+| [Backend API](https://github.com/emillia-q/audio-violence-detection-backend)             | Secure API, device lifecycle, alerts and user relationships |
+| [TinyML model](https://github.com/emillia-q/audio-violence-detection-tinyml)             | On-device audio violence classification                     |
+| [IoT hardware](https://github.com/emillia-q/audio-violence-detection-hardware)           | Edge device that runs the model and sends alerts            |
+| [React Native application](https://github.com/emillia-q/audio-violence-detection-mobile) | Mobile experience for protected and trusted users           |
 
 ## 🔄 System flow
+
 ![System flow](assets/system_flow.png)
 
 ## 📱 API preview
