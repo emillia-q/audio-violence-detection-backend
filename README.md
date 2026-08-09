@@ -42,11 +42,7 @@ This repository is the backend part of the four-component system. The remaining 
 ## 📱 API preview
 
 The API is documented with Swagger UI and includes JWT Bearer authentication support for protected endpoints.
-
-> **SCREENSHOT TO ADD:** Swagger UI overview with the `Auth`, `Devices`, `Alerts` and `Users` endpoint groups visible.
-
-> **SCREENSHOT TO ADD:** a Swagger or Postman example of a successful device activation or `POST /api/v1/alerts` request
-> authenticated as a device.
+![Swagger](assets/swagger.png)
 
 ## 🏗️ Architecture highlights
 
