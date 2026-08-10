@@ -13,7 +13,8 @@ public class AlertMapper {
         return new AlertListResponse(
                 proj.getId(),
                 (proj.getDeviceName() != null ? proj.getDeviceName() : "Unnamed Device"),
-                proj.getCreatedAt()
+                proj.getCreatedAt(),
+                proj.getIsRead()
         );
     }
 

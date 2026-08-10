@@ -9,4 +9,6 @@ public interface AlertProjection {
     String getDeviceName();
 
     OffsetDateTime getCreatedAt();
+
+    Boolean getIsRead();
 }
