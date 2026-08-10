@@ -12,9 +12,11 @@ import java.util.List;
 @Repository
 public interface AlertRepository extends JpaRepository<Alert, Long> {
 
-    @Query("select a.id as id, a.device.name as deviceName, a.createdAt as createdAt " +
-            "from Alert a " +
+    @Query("select a.id as id, a.device.name as deviceName, a.createdAt as createdAt, n.isRead as isRead " +
+            "from Notification n " +
+            "join n.alert a " +
             "where a.device.user.id = :userId " +
+            "and n.user.id = :userId " +
             "order by a.createdAt desc")
     List<AlertProjection> findAllByUserId(Long userId);
 
