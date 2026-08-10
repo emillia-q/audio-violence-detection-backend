@@ -5,6 +5,7 @@ import java.time.OffsetDateTime;
 public record AlertListResponse(
         Long id,
         String deviceName,
-        OffsetDateTime createdAt
+        OffsetDateTime createdAt,
+        Boolean isRead
 ) {
 }
