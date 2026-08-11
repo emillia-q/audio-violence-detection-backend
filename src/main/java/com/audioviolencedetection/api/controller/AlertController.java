@@ -40,12 +40,13 @@ public class AlertController {
         return ResponseEntity.ok(alerts);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('USER')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Delete alert considered as false alarm by user")
     @ApiResponse(responseCode = "204", description = "Alert deleted successfully")
-    public void deleteFalseAlert(@AuthenticationPrincipal SecurityUser securityUser) {
+    public void deleteFalseAlert(@AuthenticationPrincipal SecurityUser securityUser,
+                                 @PathVariable("id") Long alertId) {
 
     }
 
