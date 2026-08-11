@@ -47,7 +47,7 @@ public class AlertController {
     @ApiResponse(responseCode = "204", description = "Alert deleted successfully")
     public void deleteFalseAlert(@AuthenticationPrincipal SecurityUser securityUser,
                                  @PathVariable("id") Long alertId) {
-
+        alertService.deleteFalseAlert(securityUser.getId(), alertId);
     }
 
     // Alerts from my protected users devices
