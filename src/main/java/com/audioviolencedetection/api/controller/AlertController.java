@@ -40,6 +40,15 @@ public class AlertController {
         return ResponseEntity.ok(alerts);
     }
 
+    @DeleteMapping
+    @PreAuthorize("hasRole('USER')")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary = "Delete alert considered as false alarm by user")
+    @ApiResponse(responseCode = "204", description = "Alert deleted successfully")
+    public void deleteFalseAlert(@AuthenticationPrincipal SecurityUser securityUser) {
+
+    }
+
     // Alerts from my protected users devices
     @GetMapping("/protected-users")
     @PreAuthorize("hasRole('USER')")
@@ -55,6 +64,7 @@ public class AlertController {
         return ResponseEntity.ok(alerts);
     }
 
+    // Alerts sent by devices
     @PostMapping
     @PreAuthorize("hasRole('DEVICE')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
