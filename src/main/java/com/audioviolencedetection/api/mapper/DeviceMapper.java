@@ -11,7 +11,7 @@ public class DeviceMapper {
     public DeviceListResponse toDeviceListResponse(Device device) {
         return new DeviceListResponse(
                 device.getId(),
-                device.getName()
+                (device.getName() != null ? device.getName() : "Unnamed Device")
         );
     }
 
