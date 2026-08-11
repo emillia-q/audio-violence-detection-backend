@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface AlertRepository extends JpaRepository<Alert, Long> {
@@ -19,6 +20,8 @@ public interface AlertRepository extends JpaRepository<Alert, Long> {
             "and n.user.id = :userId " +
             "order by a.createdAt desc")
     List<AlertProjection> findAllByUserId(Long userId);
+
+    Optional<Alert> findByIdAndDeviceUserId(Long alertId, Long userId);
 
     @Query("select a.id as alertId, r.user.id as protectedUserId, " +
             "case " +

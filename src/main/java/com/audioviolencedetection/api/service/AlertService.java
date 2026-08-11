@@ -24,18 +24,30 @@ public class AlertService {
     private final DeviceRepository deviceRepository;
     private final AlertMapper alertMapper;
 
+    // Alerts from my devices
     public List<AlertListResponse> getListOfAlerts(Long userId) {
         return alertRepository.findAllByUserId(userId).stream()
                 .map(alertMapper::toAlertListResponse)
                 .toList();
     }
 
+    @Transactional
+    public void deleteFalseAlert(Long userId, Long alertId) {
+        // Check if alert belongs to a user - if it doesn't also throw exception
+        Alert alert = alertRepository.findByIdAndDeviceUserId(alertId, userId)
+                .orElseThrow(() -> ItemNotFoundException.createForId(Alert.class, alertId));
+
+        alertRepository.delete(alert);
+    }
+
+    // Alerts from my protected users devices
     public List<AlertProtectedUsersListResponse> getListOfProtectedUsersAlerts(Long userId) {
         return alertRepository.findProtectedUsersAlerts(userId).stream()
                 .map(alertMapper::toProtectedUsersAlertListResponse)
                 .toList();
     }
 
+    // Alerts sent by devices
     @Transactional
     public void sendAlertToDatabase(Long deviceId) {
         Device device = deviceRepository.findById(deviceId)
