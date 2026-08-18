@@ -4,7 +4,7 @@ import java.time.OffsetDateTime;
 
 public record NotificationListResponse(
         Long notificationId,
-        String protectedUserName,
+        String protectedUserDisplayName,
         OffsetDateTime createdAt,
         Boolean isRead
 ) {
