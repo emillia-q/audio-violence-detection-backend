@@ -1,7 +1,6 @@
 package com.audioviolencedetection.api.service;
 
 import com.audioviolencedetection.api.dto.response.AlertListResponse;
-import com.audioviolencedetection.api.dto.response.AlertProtectedUsersListResponse;
 import com.audioviolencedetection.api.entity.*;
 import com.audioviolencedetection.api.exception.ItemNotFoundException;
 import com.audioviolencedetection.api.exception.UnprocessableEntityException;
@@ -38,13 +37,6 @@ public class AlertService {
                 .orElseThrow(() -> ItemNotFoundException.createForId(Alert.class, alertId));
 
         alertRepository.delete(alert);
-    }
-
-    // Alerts from my protected users devices
-    public List<AlertProtectedUsersListResponse> getListOfProtectedUsersAlerts(Long userId) {
-        return alertRepository.findProtectedUsersAlerts(userId).stream()
-                .map(alertMapper::toProtectedUsersAlertListResponse)
-                .toList();
     }
 
     // Alerts sent by devices

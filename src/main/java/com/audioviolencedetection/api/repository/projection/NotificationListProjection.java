@@ -2,13 +2,10 @@ package com.audioviolencedetection.api.repository.projection;
 
 import java.time.OffsetDateTime;
 
-public interface AlertProjection {
+public interface NotificationListProjection {
 
-    Long getId();
-
-    String getDeviceName();
-
+    Long getNotificationId();
+    String getProtectedUserDisplayName();
     OffsetDateTime getCreatedAt();
-
     Boolean getIsRead();
 }
