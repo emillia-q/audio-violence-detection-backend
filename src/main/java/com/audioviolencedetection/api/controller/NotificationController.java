@@ -47,4 +47,14 @@ public class NotificationController {
                                          @PathVariable("id") Long notificationId) {
         notificationService.toggleNotificationStatus(securityUser.getId(), notificationId);
     }
+
+    @DeleteMapping(path = "/{id}")
+    @Operation(summary = "Delete notification")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ApiResponse(responseCode = "204", description = "Notification deleted")
+    @ApiResponse(responseCode = "404", description = "Notification not found")
+    public void deleteNotification(@AuthenticationPrincipal SecurityUser securityUser,
+                                   @PathVariable("id") Long notificationId) {
+        notificationService.deleteNotification(securityUser.getId(), notificationId);
+    }
 }

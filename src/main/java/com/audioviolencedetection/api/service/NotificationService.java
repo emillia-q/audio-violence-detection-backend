@@ -26,6 +26,19 @@ public class NotificationService {
 
     @Transactional
     public void toggleNotificationStatus(Long userId, Long notificationId) {
+        Notification notification = checkAccess(userId, notificationId);
+
+        notification.setRead(!notification.isRead());
+    }
+
+    @Transactional
+    public void deleteNotification(Long userId, Long notificationId) {
+        Notification notification = checkAccess(userId, notificationId);
+
+        notificationRepository.delete(notification);
+    }
+
+    private Notification checkAccess(Long userId, Long notificationId) {
         Notification notification = notificationRepository.findById(notificationId)
                 .orElseThrow(() -> ItemNotFoundException.createForId(Notification.class, notificationId));
 
@@ -33,6 +46,6 @@ public class NotificationService {
         if (!notification.getUser().getId().equals(userId))
             throw ItemNotFoundException.createForId(Notification.class, notificationId);
 
-        notification.setRead(!notification.isRead());
+        return notification;
     }
 }
