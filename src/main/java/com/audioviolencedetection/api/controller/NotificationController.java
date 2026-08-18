@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -39,6 +40,7 @@ public class NotificationController {
 
     @PatchMapping(path = "/{id}/toggle-status")
     @Operation(summary = "Toggle notification status")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponse(responseCode = "204", description = "Notification status changed")
     @ApiResponse(responseCode = "404", description = "Notification not found")
     public void toggleNotificationStatus(@AuthenticationPrincipal SecurityUser securityUser,
