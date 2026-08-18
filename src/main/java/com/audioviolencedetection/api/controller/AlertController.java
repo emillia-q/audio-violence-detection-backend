@@ -1,7 +1,6 @@
 package com.audioviolencedetection.api.controller;
 
 import com.audioviolencedetection.api.dto.response.AlertListResponse;
-import com.audioviolencedetection.api.dto.response.AlertProtectedUsersListResponse;
 import com.audioviolencedetection.api.security.model.SecurityDevice;
 import com.audioviolencedetection.api.security.model.SecurityUser;
 import com.audioviolencedetection.api.service.AlertService;

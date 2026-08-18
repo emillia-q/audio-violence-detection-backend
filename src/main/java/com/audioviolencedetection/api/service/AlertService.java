@@ -1,7 +1,6 @@
 package com.audioviolencedetection.api.service;
 
 import com.audioviolencedetection.api.dto.response.AlertListResponse;
-import com.audioviolencedetection.api.dto.response.AlertProtectedUsersListResponse;
 import com.audioviolencedetection.api.entity.*;
 import com.audioviolencedetection.api.exception.ItemNotFoundException;
 import com.audioviolencedetection.api.exception.UnprocessableEntityException;
