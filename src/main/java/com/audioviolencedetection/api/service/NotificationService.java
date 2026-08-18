@@ -23,9 +23,13 @@ public class NotificationService {
                 .toList();
     }
 
-    public void toggleNotificationStatus(Long notificationId) {
+    public void toggleNotificationStatus(Long userId, Long notificationId) {
         Notification notification = notificationRepository.findById(notificationId)
                 .orElseThrow(() -> ItemNotFoundException.createForId(Notification.class, notificationId));
+
+        // Check if the notification is connected to a logged user otherwise mask access
+        if (!notification.getUser().getId().equals(userId))
+            throw ItemNotFoundException.createForId(Notification.class, notificationId);
 
         notification.setRead(!notification.isRead());
     }

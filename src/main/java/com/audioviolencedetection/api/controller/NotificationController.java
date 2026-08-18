@@ -40,8 +40,9 @@ public class NotificationController {
     @PatchMapping(path = "/{id}/toggle-status")
     @Operation(summary = "Toggle notification status")
     @ApiResponse(responseCode = "204", description = "Notification status changed")
+    @ApiResponse(responseCode = "404", description = "Notification not found")
     public void toggleNotificationStatus(@AuthenticationPrincipal SecurityUser securityUser,
-                                         @PathVariable Long notificationId) {
-        notificationService.toggleNotificationStatus(notificationId);
+                                         @PathVariable("id") Long notificationId) {
+        notificationService.toggleNotificationStatus(securityUser.getId(), notificationId);
     }
 }
