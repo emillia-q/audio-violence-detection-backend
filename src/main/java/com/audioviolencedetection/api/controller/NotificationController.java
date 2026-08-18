@@ -40,7 +40,7 @@ public class NotificationController {
         return ResponseEntity.ok(notifications);
     }
 
-    @PatchMapping(path = "/{id}")
+    @PatchMapping(path = "/{id}/toggle-status")
     @Operation(summary = "Toggle notification status")
     @ApiResponse(responseCode = "204", description = "Notification status changed")
     public void toggleNotificationStatus(@AuthenticationPrincipal SecurityUser securityUser) {
