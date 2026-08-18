@@ -4,7 +4,7 @@ import java.time.OffsetDateTime;
 
 public interface NotificationListProjection {
 
-    Long getId();
+    Long getNotificationId();
     String getProtectedUserName();
     OffsetDateTime getCreatedAt();
     Boolean getIsRead();
