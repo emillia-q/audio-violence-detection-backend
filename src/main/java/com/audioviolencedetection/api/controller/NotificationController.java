@@ -12,4 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 @SecurityRequirement(name = "Bearer Authentication")
 @PreAuthorize("hasRole('USER')")
 public class NotificationController {
+
+
 }
