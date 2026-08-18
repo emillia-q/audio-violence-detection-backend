@@ -23,7 +23,12 @@ public interface UserRelationshipRepository extends JpaRepository<UserRelationsh
             "where r.user.id = :userId")
     List<TrustedUserListProjection> findTrustedUsersByUserId(Long userId);
 
-    @Query("select r.user.id as protectedUserId, r.nicknameForSupervised as protectedUserNickname " +
+    @Query("select r.user.id as protectedUserId, " +
+            "case " +
+            "when r.nicknameForSupervised = 'My Supervised User' " +
+            "then concat(r.user.firstName, ' ', r.user.lastName) " +
+            "else r.nicknameForSupervised " +
+            "end as protectedUserDisplayName " +
             "from UserRelationship r " +
             "where r.trustedUser.id = :userId")
     List<ProtectedUserListProjection> findProtectedUsersByUserId(Long userId);

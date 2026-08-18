@@ -19,7 +19,7 @@ public class UserRelationshipMapper {
     public ProtectedUserListResponse toProtectedUserListResponse(ProtectedUserListProjection proj) {
         return new ProtectedUserListResponse(
                 proj.getProtectedUserId(),
-                proj.getProtectedUserNickname()
+                proj.getProtectedUserDisplayName()
         );
     }
 }
