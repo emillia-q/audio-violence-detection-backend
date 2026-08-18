@@ -12,7 +12,7 @@ public class UserRelationshipMapper {
     public TrustedUserListResponse toTrustedUserListResponse(TrustedUserListProjection proj) {
         return new TrustedUserListResponse(
                 proj.getTrustedUserId(),
-                proj.getTrustedUserNickname()
+                proj.getTrustedUserDisplayName()
         );
     }
 

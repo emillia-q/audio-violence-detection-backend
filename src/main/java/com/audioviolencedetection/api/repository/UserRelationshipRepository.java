@@ -13,7 +13,12 @@ import java.util.List;
 @Repository
 public interface UserRelationshipRepository extends JpaRepository<UserRelationship, UserRelationshipId> {
 
-    @Query("select r.trustedUser.id as trustedUserId, r.nicknameForTrusted as trustedUserNickname " +
+    @Query("select r.trustedUser.id as trustedUserId, " +
+            "case " +
+            "when r.nicknameForTrusted = 'My Guardian' " +
+            "then concat(r.trustedUser.firstName, ' ', r.trustedUser.lastName) " +
+            "else r.nicknameForTrusted " +
+            "end as trustedUserDisplayName " +
             "from UserRelationship r " +
             "where r.user.id = :userId")
     List<TrustedUserListProjection> findTrustedUsersByUserId(Long userId);

@@ -4,5 +4,5 @@ public interface TrustedUserListProjection {
 
     Long getTrustedUserId();
 
-    String getTrustedUserNickname();
+    String getTrustedUserDisplayName();
 }
