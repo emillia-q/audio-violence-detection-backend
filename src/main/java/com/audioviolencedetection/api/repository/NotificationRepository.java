@@ -25,7 +25,8 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
             "n.createdAt as createdAt, " +
             "n.isRead as isRead " +
             "from Notification n " +
-            "join UserRelationship r on r.user.id = n.user.id " +
+            "join UserRelationship r on r.trustedUser.id = n.user.id " +
+            "and r.user.id = n.alert.device.user.id " +
             "where r.trustedUser.id = :trustedUserId " +
             "order by n.createdAt desc")
     List<NotificationListProjection> findProtectedUsersAlerts(Long trustedUserId);
