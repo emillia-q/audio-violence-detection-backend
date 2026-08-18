@@ -7,12 +7,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -37,5 +36,25 @@ public class NotificationController {
             return ResponseEntity.noContent().build();
 
         return ResponseEntity.ok(notifications);
+    }
+
+    @PatchMapping(path = "/{id}/toggle-status")
+    @Operation(summary = "Toggle notification status")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ApiResponse(responseCode = "204", description = "Notification status changed")
+    @ApiResponse(responseCode = "404", description = "Notification not found")
+    public void toggleNotificationStatus(@AuthenticationPrincipal SecurityUser securityUser,
+                                         @PathVariable("id") Long notificationId) {
+        notificationService.toggleNotificationStatus(securityUser.getId(), notificationId);
+    }
+
+    @DeleteMapping(path = "/{id}")
+    @Operation(summary = "Delete notification")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ApiResponse(responseCode = "204", description = "Notification deleted")
+    @ApiResponse(responseCode = "404", description = "Notification not found")
+    public void deleteNotification(@AuthenticationPrincipal SecurityUser securityUser,
+                                   @PathVariable("id") Long notificationId) {
+        notificationService.deleteNotification(securityUser.getId(), notificationId);
     }
 }
