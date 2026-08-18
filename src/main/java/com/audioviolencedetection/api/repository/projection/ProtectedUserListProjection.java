@@ -4,5 +4,5 @@ public interface ProtectedUserListProjection {
 
     Long getProtectedUserId();
 
-    String getProtectedUserNickname();
+    String getProtectedUserDisplayName();
 }
