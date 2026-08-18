@@ -5,6 +5,7 @@ import com.audioviolencedetection.api.entity.Notification;
 import com.audioviolencedetection.api.exception.ItemNotFoundException;
 import com.audioviolencedetection.api.mapper.NotificationMapper;
 import com.audioviolencedetection.api.repository.NotificationRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,7 @@ public class NotificationService {
                 .toList();
     }
 
+    @Transactional
     public void toggleNotificationStatus(Long userId, Long notificationId) {
         Notification notification = notificationRepository.findById(notificationId)
                 .orElseThrow(() -> ItemNotFoundException.createForId(Notification.class, notificationId));
