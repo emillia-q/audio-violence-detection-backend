@@ -10,10 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -43,7 +40,8 @@ public class NotificationController {
     @PatchMapping(path = "/{id}/toggle-status")
     @Operation(summary = "Toggle notification status")
     @ApiResponse(responseCode = "204", description = "Notification status changed")
-    public void toggleNotificationStatus(@AuthenticationPrincipal SecurityUser securityUser) {
-
+    public void toggleNotificationStatus(@AuthenticationPrincipal SecurityUser securityUser,
+                                         @PathVariable Long notificationId) {
+        notificationService.toggleNotificationStatus(notificationId);
     }
 }
