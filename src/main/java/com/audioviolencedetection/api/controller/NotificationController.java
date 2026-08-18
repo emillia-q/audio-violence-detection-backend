@@ -28,7 +28,7 @@ public class NotificationController {
     @GetMapping
     @Operation(summary = "Get list of all protected users notifications")
     @ApiResponse(responseCode = "200", description = "Return list of notifications")
-    @ApiResponse(responseCode = "204", description = "No notifications")
+    @ApiResponse(responseCode = "204", description = "List of notifications is empty")
     public ResponseEntity<List<NotificationListResponse>> getProtectedUsersNotifications(
             @AuthenticationPrincipal SecurityUser securityUser) {
         List<NotificationListResponse> notifications = notificationService.getProtectedUsersNotifications(securityUser.getId());

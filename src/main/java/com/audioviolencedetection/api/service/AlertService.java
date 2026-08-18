@@ -40,13 +40,6 @@ public class AlertService {
         alertRepository.delete(alert);
     }
 
-    // Alerts from my protected users devices
-    public List<AlertProtectedUsersListResponse> getListOfProtectedUsersAlerts(Long userId) {
-        return alertRepository.findProtectedUsersAlerts(userId).stream()
-                .map(alertMapper::toProtectedUsersAlertListResponse)
-                .toList();
-    }
-
     // Alerts sent by devices
     @Transactional
     public void sendAlertToDatabase(Long deviceId) {
