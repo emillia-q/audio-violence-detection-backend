@@ -96,7 +96,7 @@ public class UserService {
         UserRelationship relationship = userRelationshipRepository.findById(relationshipId)
                 .orElseThrow(() -> new RelationshipNotFoundException("Trusted user relationship not found"));
 
-        if (request.customNickname() == null)
+        if (request.customNickname() == null || request.customNickname().isBlank())
             relationship.setNicknameForTrusted("My Guardian");
         else
             relationship.setNicknameForTrusted(request.customNickname());
@@ -134,7 +134,7 @@ public class UserService {
         UserRelationship relationship = userRelationshipRepository.findById(relationshipId)
                 .orElseThrow(() -> new RelationshipNotFoundException("Protected user relationship not found"));
 
-        if (request.customNickname() == null)
+        if (request.customNickname() == null || request.customNickname().isBlank())
             relationship.setNicknameForSupervised("My Supervised User");
         else
             relationship.setNicknameForSupervised(request.customNickname());
