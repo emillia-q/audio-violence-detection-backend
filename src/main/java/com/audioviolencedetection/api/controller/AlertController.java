@@ -41,6 +41,17 @@ public class AlertController {
         return ResponseEntity.ok(alerts);
     }
 
+    @PatchMapping(path = "/{id}/toggle-status")
+    @PreAuthorize("hasRole('USER')")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary = "Toggle alert read status")
+    @ApiResponse(responseCode = "204", description = "Alert status changed")
+    @ApiResponse(responseCode = "404", description = "Alert not found")
+    public void toggleNotificationStatusByAlertId(@AuthenticationPrincipal SecurityUser securityUser,
+                                  @PathVariable("id") Long alertId) {
+        alertService.toggleNotificationStatusByAlertId(securityUser.getId(), alertId);
+    }
+
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('USER')")
     @ResponseStatus(HttpStatus.NO_CONTENT)

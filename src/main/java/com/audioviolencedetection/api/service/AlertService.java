@@ -34,6 +34,14 @@ public class AlertService {
     }
 
     @Transactional
+    public void toggleNotificationStatusByAlertId(Long userId, Long alertId) {
+        Notification notification = notificationRepository.findByAlertIdAndUserId(alertId, userId)
+                .orElseThrow(() -> ItemNotFoundException.createForId(Notification.class, alertId));
+
+        notification.setRead(!notification.isRead());
+    }
+
+    @Transactional
     public void deleteFalseAlert(Long userId, Long alertId) {
         // Check if alert belongs to a user - if it doesn't also throw exception
         Alert alert = alertRepository.findByIdAndDeviceUserId(alertId, userId)
