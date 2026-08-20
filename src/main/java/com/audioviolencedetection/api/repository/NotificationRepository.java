@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
+import java.awt.print.Pageable;
 import java.util.List;
 
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
@@ -29,5 +30,5 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
             "and r.user.id = n.alert.device.user.id " +
             "where r.trustedUser.id = :trustedUserId " +
             "order by n.createdAt desc")
-    List<NotificationListProjection> findProtectedUsersAlerts(Long trustedUserId);
+    List<NotificationListProjection> findProtectedUsersAlerts(Long trustedUserId, Pageable pageable);
 }
