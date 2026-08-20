@@ -7,6 +7,7 @@ import com.audioviolencedetection.api.mapper.NotificationMapper;
 import com.audioviolencedetection.api.repository.NotificationRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,8 +19,10 @@ public class NotificationService {
     private final NotificationRepository notificationRepository;
     private final NotificationMapper notificationMapper;
 
-    public List<NotificationListResponse> getProtectedUsersNotifications(Long trustedUserId) {
-        return notificationRepository.findProtectedUsersAlerts(trustedUserId).stream()
+    public List<NotificationListResponse> getProtectedUsersNotifications(Long trustedUserId, int pageNumber, int pageSize) {
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+
+        return notificationRepository.findProtectedUsersAlerts(trustedUserId, pageRequest).stream()
                 .map(notificationMapper::toNotificationListResponse)
                 .toList();
     }

@@ -10,6 +10,7 @@ import com.audioviolencedetection.api.repository.DeviceRepository;
 import com.audioviolencedetection.api.repository.NotificationRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,8 +25,10 @@ public class AlertService {
     private final AlertMapper alertMapper;
 
     // Alerts from my devices
-    public List<AlertListResponse> getListOfAlerts(Long userId) {
-        return alertRepository.findAllByUserId(userId).stream()
+    public List<AlertListResponse> getListOfAlerts(Long userId, int pageNumber, int pageSize) {
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+
+        return alertRepository.findAllByUserId(userId, pageRequest).stream()
                 .map(alertMapper::toAlertListResponse)
                 .toList();
     }
