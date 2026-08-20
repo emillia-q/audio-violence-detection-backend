@@ -29,8 +29,10 @@ public class NotificationController {
     @ApiResponse(responseCode = "200", description = "Return list of notifications")
     @ApiResponse(responseCode = "204", description = "List of notifications is empty")
     public ResponseEntity<List<NotificationListResponse>> getProtectedUsersNotifications(
-            @AuthenticationPrincipal SecurityUser securityUser) {
-        List<NotificationListResponse> notifications = notificationService.getProtectedUsersNotifications(securityUser.getId());
+            @AuthenticationPrincipal SecurityUser securityUser,
+            @RequestParam(defaultValue = "0") int pageNumber,
+            @RequestParam(defaultValue = "5") int pageSize) {
+        List<NotificationListResponse> notifications = notificationService.getProtectedUsersNotifications(securityUser.getId(), pageNumber, pageSize);
 
         if (notifications.isEmpty())
             return ResponseEntity.noContent().build();
