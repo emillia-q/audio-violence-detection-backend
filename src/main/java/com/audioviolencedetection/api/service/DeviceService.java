@@ -1,7 +1,7 @@
 package com.audioviolencedetection.api.service;
 
-import com.audioviolencedetection.api.dto.request.DeviceActivationRequest;
-import com.audioviolencedetection.api.dto.request.DevicePairRequest;
+import com.audioviolencedetection.api.dto.request.DeviceCredentialsRequest;
+import com.audioviolencedetection.api.dto.request.DeviceCredentialsRequest;
 import com.audioviolencedetection.api.dto.request.UpdateDeviceNameRequest;
 import com.audioviolencedetection.api.dto.response.DeviceDetailsResponse;
 import com.audioviolencedetection.api.dto.response.DeviceListResponse;
@@ -48,7 +48,7 @@ public class DeviceService {
     }
 
     @Transactional
-    public DeviceDetailsResponse pairDevice(Long userId, DevicePairRequest request) {
+    public DeviceDetailsResponse pairDevice(Long userId, DeviceCredentialsRequest request) {
         Device device = deviceRepository.findByMacAddress(request.macAddress())
                 .orElseThrow(() -> ItemNotFoundException.createForMacAddress(Device.class, request.macAddress()));
 
@@ -105,7 +105,7 @@ public class DeviceService {
     // Device
 
     @Transactional
-    public void confirmDeviceActivation(DeviceActivationRequest request) {
+    public void confirmDeviceActivation(DeviceCredentialsRequest request) {
         Device device = deviceRepository.findByMacAddress(request.macAddress())
                 .orElseThrow(() -> ItemNotFoundException.createForMacAddress(Device.class, request.macAddress()));
 
