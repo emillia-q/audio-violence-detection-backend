@@ -1,6 +1,7 @@
 package com.audioviolencedetection.api.controller;
 
 import com.audioviolencedetection.api.dto.request.DeviceActivationRequest;
+import com.audioviolencedetection.api.dto.request.DevicePairRequest;
 import com.audioviolencedetection.api.dto.request.UpdateDeviceNameRequest;
 import com.audioviolencedetection.api.dto.response.DeviceDetailsResponse;
 import com.audioviolencedetection.api.dto.response.DeviceListResponse;
@@ -57,15 +58,16 @@ public class DeviceController {
 
     @PostMapping("/pair-device")
     @PreAuthorize("hasRole('USER')")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Pair an IoT device with a user account")
     @ApiResponse(responseCode = "200", description = "Paired an IoT device")
     @ApiResponse(responseCode = "400", description = "Invalid request payload or validation failed")
     @ApiResponse(responseCode = "401", description = "Invalid device secret")
     @ApiResponse(responseCode = "404", description = "Device or user not found")
     @ApiResponse(responseCode = "409", description = "Device is already assigned to a user")
-    public DeviceDetailsResponse pairDevice(@AuthenticationPrincipal SecurityUser securityUser) {
-
+    public DeviceDetailsResponse pairDevice(@AuthenticationPrincipal SecurityUser securityUser,
+                                            @Valid @RequestBody DevicePairRequest request) {
+        return deviceService.pairDevice(securityUser.getId(), request);
     }
 
     @PatchMapping("/{id}")
