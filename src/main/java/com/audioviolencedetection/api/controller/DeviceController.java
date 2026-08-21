@@ -1,6 +1,7 @@
 package com.audioviolencedetection.api.controller;
 
 import com.audioviolencedetection.api.dto.request.DeviceActivationRequest;
+import com.audioviolencedetection.api.dto.request.DevicePairRequest;
 import com.audioviolencedetection.api.dto.request.UpdateDeviceNameRequest;
 import com.audioviolencedetection.api.dto.response.DeviceDetailsResponse;
 import com.audioviolencedetection.api.dto.response.DeviceListResponse;
@@ -26,6 +27,8 @@ import java.util.List;
 public class DeviceController {
 
     private final DeviceService deviceService;
+
+    // User
 
     @GetMapping
     @PreAuthorize("hasRole('USER')")
@@ -53,16 +56,18 @@ public class DeviceController {
         return deviceService.getDeviceDetails(securityUser.getId(), deviceId);
     }
 
-    @PostMapping("/activate")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Operation(summary = "Activate and pair an IoT device with a user account")
-    @ApiResponse(responseCode = "204", description = "Activated and paired an IoT device")
+    @PatchMapping("/pair-device")
+    @PreAuthorize("hasRole('USER')")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Pair an IoT device with a user account")
+    @ApiResponse(responseCode = "200", description = "Paired an IoT device")
     @ApiResponse(responseCode = "400", description = "Invalid request payload or validation failed")
     @ApiResponse(responseCode = "401", description = "Invalid device secret")
     @ApiResponse(responseCode = "404", description = "Device or user not found")
     @ApiResponse(responseCode = "409", description = "Device is already assigned to a user")
-    public void activateAndPairDevice(@Valid @RequestBody DeviceActivationRequest request) {
-        deviceService.activateAndPairDevice(request);
+    public DeviceDetailsResponse pairDevice(@AuthenticationPrincipal SecurityUser securityUser,
+                                            @Valid @RequestBody DevicePairRequest request) {
+        return deviceService.pairDevice(securityUser.getId(), request);
     }
 
     @PatchMapping("/{id}")
@@ -86,5 +91,19 @@ public class DeviceController {
     public void disconnectDevice(@AuthenticationPrincipal SecurityUser securityUser,
                                  @PathVariable("id") Long deviceId) {
         deviceService.disconnectDevice(securityUser.getId(), deviceId);
+    }
+
+    // Device
+
+    @PostMapping("/activate")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary = "Activate and pair an IoT device with a user account")
+    @ApiResponse(responseCode = "204", description = "Activated and paired an IoT device")
+    @ApiResponse(responseCode = "400", description = "Invalid request payload or validation failed")
+    @ApiResponse(responseCode = "401", description = "Invalid device secret")
+    @ApiResponse(responseCode = "404", description = "Device or user not found")
+    @ApiResponse(responseCode = "409", description = "Device is already assigned to a user")
+    public void activateAndPairDevice(@Valid @RequestBody DeviceActivationRequest request) {
+        deviceService.activateAndPairDevice(request);
     }
 }

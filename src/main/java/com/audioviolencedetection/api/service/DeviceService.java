@@ -1,6 +1,7 @@
 package com.audioviolencedetection.api.service;
 
 import com.audioviolencedetection.api.dto.request.DeviceActivationRequest;
+import com.audioviolencedetection.api.dto.request.DevicePairRequest;
 import com.audioviolencedetection.api.dto.request.UpdateDeviceNameRequest;
 import com.audioviolencedetection.api.dto.response.DeviceDetailsResponse;
 import com.audioviolencedetection.api.dto.response.DeviceListResponse;
@@ -27,6 +28,8 @@ public class DeviceService {
     private final UserRepository userRepository;
     private final DeviceMapper deviceMapper;
 
+    // User
+
     public List<DeviceListResponse> getUserDevices(Long userId) {
         userRepository.findById(userId)
                 .orElseThrow(() -> ItemNotFoundException.createForId(User.class, userId));
@@ -44,7 +47,7 @@ public class DeviceService {
     }
 
     @Transactional
-    public void activateAndPairDevice(DeviceActivationRequest request) {
+    public DeviceDetailsResponse pairDevice(Long userId, DevicePairRequest request) {
         Device device = deviceRepository.findByMacAddress(request.macAddress())
                 .orElseThrow(() -> ItemNotFoundException.createForMacAddress(Device.class, request.macAddress()));
 
@@ -55,14 +58,15 @@ public class DeviceService {
 
         // Check if device already has a user
         if (device.getUser() != null)
-            throw new ResourceInUseException("This device is already signed to a user");
+            throw new ResourceInUseException("This device is already assigned to a user");
 
-        User user = userRepository.findByEmail(request.email())
-                .orElseThrow(() -> ItemNotFoundException.createForEmail(User.class, request.email()));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> ItemNotFoundException.createForId(User.class, userId));
 
         // Assign a new user to the device & activate
         device.setUser(user);
-        device.setIsActivated(true);
+
+        return deviceMapper.toDeviceDetailsResponse(device);
     }
 
     @Transactional
@@ -94,5 +98,30 @@ public class DeviceService {
             throw ItemNotFoundException.createForId(Device.class, deviceId);
 
         return device;
+    }
+
+
+    // Device
+
+    @Transactional
+    public void activateAndPairDevice(DeviceActivationRequest request) {
+        Device device = deviceRepository.findByMacAddress(request.macAddress())
+                .orElseThrow(() -> ItemNotFoundException.createForMacAddress(Device.class, request.macAddress()));
+
+        String incomingHash = CryptoUtils.hashDeviceSecret(request.deviceSecret());
+        // Check if device secret is the same
+        if (!incomingHash.equalsIgnoreCase(device.getDeviceSecret()))
+            throw new InvalidDeviceSecretException("Invalid device secret");
+
+        // Check if device already has a user
+        if (device.getUser() != null)
+            throw new ResourceInUseException("This device is already assigned to a user");
+
+        User user = userRepository.findByEmail(request.email())
+                .orElseThrow(() -> ItemNotFoundException.createForEmail(User.class, request.email()));
+
+        // Assign a new user to the device & activate
+        device.setUser(user);
+        device.setIsActivated(true);
     }
 }
