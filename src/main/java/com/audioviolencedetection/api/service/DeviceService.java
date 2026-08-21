@@ -10,6 +10,7 @@ import com.audioviolencedetection.api.entity.User;
 import com.audioviolencedetection.api.exception.InvalidDeviceSecretException;
 import com.audioviolencedetection.api.exception.ItemNotFoundException;
 import com.audioviolencedetection.api.exception.ResourceInUseException;
+import com.audioviolencedetection.api.exception.UnprocessableEntityException;
 import com.audioviolencedetection.api.mapper.DeviceMapper;
 import com.audioviolencedetection.api.repository.DeviceRepository;
 import com.audioviolencedetection.api.repository.UserRepository;
@@ -63,7 +64,7 @@ public class DeviceService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> ItemNotFoundException.createForId(User.class, userId));
 
-        // Assign a new user to the device & activate
+        // Assign a new user to the device
         device.setUser(user);
 
         return deviceMapper.toDeviceDetailsResponse(device);
@@ -104,7 +105,7 @@ public class DeviceService {
     // Device
 
     @Transactional
-    public void activateAndPairDevice(DeviceActivationRequest request) {
+    public void confirmDeviceActivation(DeviceActivationRequest request) {
         Device device = deviceRepository.findByMacAddress(request.macAddress())
                 .orElseThrow(() -> ItemNotFoundException.createForMacAddress(Device.class, request.macAddress()));
 
@@ -113,15 +114,11 @@ public class DeviceService {
         if (!incomingHash.equalsIgnoreCase(device.getDeviceSecret()))
             throw new InvalidDeviceSecretException("Invalid device secret");
 
-        // Check if device already has a user
-        if (device.getUser() != null)
-            throw new ResourceInUseException("This device is already assigned to a user");
+        // Check if device has user
+        if (device.getUser() == null)
+            throw new UnprocessableEntityException("Device must be paired with a user before activation");
 
-        User user = userRepository.findByEmail(request.email())
-                .orElseThrow(() -> ItemNotFoundException.createForEmail(User.class, request.email()));
-
-        // Assign a new user to the device & activate
-        device.setUser(user);
+        // Activate the device
         device.setIsActivated(true);
     }
 }
