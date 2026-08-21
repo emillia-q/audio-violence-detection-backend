@@ -1,7 +1,7 @@
 package com.audioviolencedetection.api.controller;
 
-import com.audioviolencedetection.api.dto.request.DeviceActivationRequest;
-import com.audioviolencedetection.api.dto.request.DevicePairRequest;
+import com.audioviolencedetection.api.dto.request.DeviceCredentialsRequest;
+import com.audioviolencedetection.api.dto.request.DeviceCredentialsRequest;
 import com.audioviolencedetection.api.dto.request.UpdateDeviceNameRequest;
 import com.audioviolencedetection.api.dto.response.DeviceDetailsResponse;
 import com.audioviolencedetection.api.dto.response.DeviceListResponse;
@@ -66,7 +66,7 @@ public class DeviceController {
     @ApiResponse(responseCode = "404", description = "Device or user not found")
     @ApiResponse(responseCode = "409", description = "Device is already assigned to a user")
     public DeviceDetailsResponse pairDevice(@AuthenticationPrincipal SecurityUser securityUser,
-                                            @Valid @RequestBody DevicePairRequest request) {
+                                            @Valid @RequestBody DeviceCredentialsRequest request) {
         return deviceService.pairDevice(securityUser.getId(), request);
     }
 
@@ -95,15 +95,15 @@ public class DeviceController {
 
     // Device
 
-    @PostMapping("/activate")
+    @PatchMapping("/activate")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Activate and pair an IoT device with a user account")
-    @ApiResponse(responseCode = "204", description = "Activated and paired an IoT device")
+    @ApiResponse(responseCode = "204", description = "Activated an IoT device")
     @ApiResponse(responseCode = "400", description = "Invalid request payload or validation failed")
     @ApiResponse(responseCode = "401", description = "Invalid device secret")
-    @ApiResponse(responseCode = "404", description = "Device or user not found")
-    @ApiResponse(responseCode = "409", description = "Device is already assigned to a user")
-    public void activateAndPairDevice(@Valid @RequestBody DeviceActivationRequest request) {
-        deviceService.activateAndPairDevice(request);
+    @ApiResponse(responseCode = "404", description = "Device not found")
+    @ApiResponse(responseCode = "422", description = "Device is not paired with a user")
+    public void confirmDeviceActivation(@Valid @RequestBody DeviceCredentialsRequest request) {
+        deviceService.confirmDeviceActivation(request);
     }
 }

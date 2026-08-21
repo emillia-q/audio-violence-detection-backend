@@ -1,6 +1,6 @@
 package com.audioviolencedetection.api.service;
 
-import com.audioviolencedetection.api.dto.request.DeviceLoginRequest;
+import com.audioviolencedetection.api.dto.request.DeviceCredentialsRequest;
 import com.audioviolencedetection.api.dto.request.LoginRequest;
 import com.audioviolencedetection.api.dto.request.RegisterRequest;
 import com.audioviolencedetection.api.dto.response.AuthResponse;
@@ -87,7 +87,7 @@ public class AuthService {
     }
 
     // Device
-    public DeviceLoginResponse authenticateDevice(DeviceLoginRequest request) {
+    public DeviceLoginResponse authenticateDevice(DeviceCredentialsRequest request) {
         Device device = deviceRepository.findByMacAddress(request.macAddress())
                 .orElseThrow(() -> ItemNotFoundException.createForMacAddress(Device.class, request.macAddress()));
 
