@@ -56,7 +56,7 @@ public class DeviceController {
         return deviceService.getDeviceDetails(securityUser.getId(), deviceId);
     }
 
-    @PostMapping("/pair-device")
+    @PatchMapping("/pair-device")
     @PreAuthorize("hasRole('USER')")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Pair an IoT device with a user account")
