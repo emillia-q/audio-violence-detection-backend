@@ -29,16 +29,16 @@ public class GlobalExceptionHandler {
     }
 
     // Security
+    // 400 - IoT secret
+    @ExceptionHandler(InvalidDeviceSecretException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidDeviceSecretException(InvalidDeviceSecretException ex) {
+        return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
     // 401 - user
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ErrorResponse> handleBadCredentialsException(BadCredentialsException ex) {
         return buildResponse(HttpStatus.UNAUTHORIZED, "Invalid email or password");
-    }
-
-    // 401 - IoT secret
-    @ExceptionHandler(InvalidDeviceSecretException.class)
-    public ResponseEntity<ErrorResponse> handleInvalidDeviceSecretException(InvalidDeviceSecretException ex) {
-        return buildResponse(HttpStatus.UNAUTHORIZED, ex.getMessage());
     }
 
     // 401 - missing or invalid token
