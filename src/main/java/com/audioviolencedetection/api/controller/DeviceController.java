@@ -61,8 +61,7 @@ public class DeviceController {
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Pair an IoT device with a user account")
     @ApiResponse(responseCode = "200", description = "Paired an IoT device")
-    @ApiResponse(responseCode = "400", description = "Invalid request payload or validation failed")
-    @ApiResponse(responseCode = "401", description = "Invalid device secret")
+    @ApiResponse(responseCode = "400", description = "Invalid request payload, validation failed, or invalid device secret")
     @ApiResponse(responseCode = "404", description = "Device or user not found")
     @ApiResponse(responseCode = "409", description = "Device is already assigned to a user")
     public DeviceDetailsResponse pairDevice(@AuthenticationPrincipal SecurityUser securityUser,
@@ -99,8 +98,7 @@ public class DeviceController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Activate and pair an IoT device with a user account")
     @ApiResponse(responseCode = "204", description = "Activated an IoT device")
-    @ApiResponse(responseCode = "400", description = "Invalid request payload or validation failed")
-    @ApiResponse(responseCode = "401", description = "Invalid device secret")
+    @ApiResponse(responseCode = "400", description = "Invalid request payload, validation failed, or invalid device secret")
     @ApiResponse(responseCode = "404", description = "Device not found")
     @ApiResponse(responseCode = "422", description = "Device is not paired with a user")
     public void confirmDeviceActivation(@Valid @RequestBody DeviceCredentialsRequest request) {
