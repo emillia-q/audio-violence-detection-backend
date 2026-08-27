@@ -1,13 +1,12 @@
 package com.audioviolencedetection.api.service;
 
 import com.audioviolencedetection.api.dto.request.DeviceCredentialsRequest;
-import com.audioviolencedetection.api.dto.request.DeviceCredentialsRequest;
 import com.audioviolencedetection.api.dto.request.UpdateDeviceNameRequest;
 import com.audioviolencedetection.api.dto.response.DeviceDetailsResponse;
 import com.audioviolencedetection.api.dto.response.DeviceListResponse;
 import com.audioviolencedetection.api.entity.Device;
 import com.audioviolencedetection.api.entity.User;
-import com.audioviolencedetection.api.exception.InvalidDeviceSecretException;
+import com.audioviolencedetection.api.exception.InvalidDeviceCredentialsException;
 import com.audioviolencedetection.api.exception.ItemNotFoundException;
 import com.audioviolencedetection.api.exception.ResourceInUseException;
 import com.audioviolencedetection.api.exception.UnprocessableEntityException;
@@ -55,7 +54,7 @@ public class DeviceService {
         String incomingHash = CryptoUtils.hashDeviceSecret(request.deviceSecret());
         // Check if device secret is the same
         if (!incomingHash.equalsIgnoreCase(device.getDeviceSecret()))
-            throw new InvalidDeviceSecretException("Invalid device secret");
+            throw new InvalidDeviceCredentialsException("Invalid device secret");
 
         // Check if device already has a user
         if (device.getUser() != null)
@@ -112,7 +111,7 @@ public class DeviceService {
         String incomingHash = CryptoUtils.hashDeviceSecret(request.deviceSecret());
         // Check if device secret is the same
         if (!incomingHash.equalsIgnoreCase(device.getDeviceSecret()))
-            throw new InvalidDeviceSecretException("Invalid device secret");
+            throw new InvalidDeviceCredentialsException("Invalid device secret");
 
         // Check if device has user
         if (device.getUser() == null)

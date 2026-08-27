@@ -7,7 +7,7 @@ import com.audioviolencedetection.api.dto.response.AuthResponse;
 import com.audioviolencedetection.api.dto.response.DeviceLoginResponse;
 import com.audioviolencedetection.api.entity.Device;
 import com.audioviolencedetection.api.entity.User;
-import com.audioviolencedetection.api.exception.InvalidDeviceSecretException;
+import com.audioviolencedetection.api.exception.InvalidDeviceCredentialsException;
 import com.audioviolencedetection.api.exception.ItemNotFoundException;
 import com.audioviolencedetection.api.exception.ResourceInUseException;
 import com.audioviolencedetection.api.exception.UnprocessableEntityException;
@@ -95,7 +95,7 @@ public class AuthService {
         String incomingHash = CryptoUtils.hashDeviceSecret(request.deviceSecret());
         // Check if device secret is the same
         if (!incomingHash.equalsIgnoreCase(device.getDeviceSecret()))
-            throw new InvalidDeviceSecretException("Invalid device credentials");
+            throw new InvalidDeviceCredentialsException("Invalid device credentials");
 
         // Check if device is connected and activated
         if (device.getUser() == null || !device.getIsActivated())
