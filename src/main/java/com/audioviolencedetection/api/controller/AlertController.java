@@ -71,7 +71,7 @@ public class AlertController {
     @ApiResponse(responseCode = "401", description = "Unauthorized: token possibly expired")
     @ApiResponse(responseCode = "403", description = "Forbidden: Required role 'DEVICE' is missing")
     @ApiResponse(responseCode = "404", description = "Device not found")
-    @ApiResponse(responseCode = "422", description = "User not assigned to the device")
+    @ApiResponse(responseCode = "422", description = "Device is disconnected or not activated")
     public void sendAlertToDatabase(@AuthenticationPrincipal SecurityDevice securityDevice) {
         alertService.sendAlertToDatabase(securityDevice.getId());
     }
