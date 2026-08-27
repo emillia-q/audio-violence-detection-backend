@@ -57,7 +57,7 @@ public class AlertService {
                 .orElseThrow(() -> ItemNotFoundException.createForId(Device.class, deviceId));
 
         User protectedUser = device.getUser();
-        if (protectedUser == null)
+        if (protectedUser == null || !device.getIsActivated())
             throw new UnprocessableEntityException("Device must be activated and paired with a user before sending alerts");
 
         // Create & save alert
