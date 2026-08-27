@@ -49,12 +49,13 @@ public class DeviceService {
     @Transactional
     public DeviceDetailsResponse pairDevice(Long userId, DeviceCredentialsRequest request) {
         Device device = deviceRepository.findByMacAddress(request.macAddress())
-                .orElseThrow(() -> ItemNotFoundException.createForMacAddress(Device.class, request.macAddress()));
+                // Not to reveal whether MAC address exists
+                .orElseThrow(() -> new InvalidDeviceCredentialsException("Invalid device credentials"));
 
         String incomingHash = CryptoUtils.hashDeviceSecret(request.deviceSecret());
         // Check if device secret is the same
         if (!incomingHash.equalsIgnoreCase(device.getDeviceSecret()))
-            throw new InvalidDeviceCredentialsException("Invalid device secret");
+            throw new InvalidDeviceCredentialsException("Invalid device credentials");
 
         // Check if device already has a user
         if (device.getUser() != null)
