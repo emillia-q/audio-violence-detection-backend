@@ -58,7 +58,7 @@ public class AlertService {
 
         User protectedUser = device.getUser();
         if (protectedUser == null || !device.getIsActivated())
-            throw new UnprocessableEntityException("Device must be activated and paired with a user before sending alerts");
+            throw new UnprocessableEntityException("Device is disconnected or not activated");
 
         // Create & save alert
         Alert savedAlert = alertRepository.save(Alert.builder()
