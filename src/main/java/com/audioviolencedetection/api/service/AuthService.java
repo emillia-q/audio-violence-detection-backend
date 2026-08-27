@@ -7,10 +7,7 @@ import com.audioviolencedetection.api.dto.response.AuthResponse;
 import com.audioviolencedetection.api.dto.response.DeviceLoginResponse;
 import com.audioviolencedetection.api.entity.Device;
 import com.audioviolencedetection.api.entity.User;
-import com.audioviolencedetection.api.exception.InvalidDeviceCredentialsException;
-import com.audioviolencedetection.api.exception.ItemNotFoundException;
-import com.audioviolencedetection.api.exception.ResourceInUseException;
-import com.audioviolencedetection.api.exception.UnprocessableEntityException;
+import com.audioviolencedetection.api.exception.*;
 import com.audioviolencedetection.api.repository.DeviceRepository;
 import com.audioviolencedetection.api.repository.UserRepository;
 import com.audioviolencedetection.api.security.model.SecurityDevice;
@@ -90,12 +87,13 @@ public class AuthService {
     // Device
     public DeviceLoginResponse authenticateDevice(DeviceCredentialsRequest request) {
         Device device = deviceRepository.findByMacAddress(request.macAddress())
-                .orElseThrow(() -> ItemNotFoundException.createForMacAddress(Device.class, request.macAddress()));
+                // Not to reveal whether MAC address exists
+                .orElseThrow(() -> new DeviceUnauthorizedException("Invalid device credentials"));
 
         String incomingHash = CryptoUtils.hashDeviceSecret(request.deviceSecret());
         // Check if device secret is the same
         if (!incomingHash.equalsIgnoreCase(device.getDeviceSecret()))
-            throw new InvalidDeviceCredentialsException("Invalid device credentials");
+            throw new DeviceUnauthorizedException("Invalid device credentials");
 
         // Check if device is connected and activated
         if (device.getUser() == null || !device.getIsActivated())
