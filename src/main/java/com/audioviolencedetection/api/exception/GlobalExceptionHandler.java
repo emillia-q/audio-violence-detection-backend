@@ -29,10 +29,10 @@ public class GlobalExceptionHandler {
     }
 
     // Security
-    // 400 - IoT secret
-    @ExceptionHandler(InvalidDeviceSecretException.class)
-    public ResponseEntity<ErrorResponse> handleInvalidDeviceSecretException(InvalidDeviceSecretException ex) {
-        return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+    // 401 - IoT credentials
+    @ExceptionHandler(DeviceUnauthorizedException.class)
+    public ResponseEntity<ErrorResponse> handleDeviceUnauthorizedException(DeviceUnauthorizedException ex) {
+        return buildResponse(HttpStatus.UNAUTHORIZED, ex.getMessage());
     }
 
     // 401 - user
@@ -48,6 +48,12 @@ public class GlobalExceptionHandler {
     }
 
     // Business logic
+    // 400 - IoT credentials
+    @ExceptionHandler(InvalidDeviceCredentialsException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidDeviceSecretException(InvalidDeviceCredentialsException ex) {
+        return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
     // 400
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<ErrorResponse> handleBadRequestException(BadRequestException ex) {
