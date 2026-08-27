@@ -1,16 +1,12 @@
 package com.audioviolencedetection.api.service;
 
 import com.audioviolencedetection.api.dto.request.DeviceCredentialsRequest;
-import com.audioviolencedetection.api.dto.request.DeviceCredentialsRequest;
 import com.audioviolencedetection.api.dto.request.UpdateDeviceNameRequest;
 import com.audioviolencedetection.api.dto.response.DeviceDetailsResponse;
 import com.audioviolencedetection.api.dto.response.DeviceListResponse;
 import com.audioviolencedetection.api.entity.Device;
 import com.audioviolencedetection.api.entity.User;
-import com.audioviolencedetection.api.exception.InvalidDeviceSecretException;
-import com.audioviolencedetection.api.exception.ItemNotFoundException;
-import com.audioviolencedetection.api.exception.ResourceInUseException;
-import com.audioviolencedetection.api.exception.UnprocessableEntityException;
+import com.audioviolencedetection.api.exception.*;
 import com.audioviolencedetection.api.mapper.DeviceMapper;
 import com.audioviolencedetection.api.repository.DeviceRepository;
 import com.audioviolencedetection.api.repository.UserRepository;
@@ -50,12 +46,13 @@ public class DeviceService {
     @Transactional
     public DeviceDetailsResponse pairDevice(Long userId, DeviceCredentialsRequest request) {
         Device device = deviceRepository.findByMacAddress(request.macAddress())
-                .orElseThrow(() -> ItemNotFoundException.createForMacAddress(Device.class, request.macAddress()));
+                // Not to reveal whether MAC address exists
+                .orElseThrow(() -> new InvalidDeviceCredentialsException("Invalid device credentials"));
 
         String incomingHash = CryptoUtils.hashDeviceSecret(request.deviceSecret());
         // Check if device secret is the same
         if (!incomingHash.equalsIgnoreCase(device.getDeviceSecret()))
-            throw new InvalidDeviceSecretException("Invalid device secret");
+            throw new InvalidDeviceCredentialsException("Invalid device credentials");
 
         // Check if device already has a user
         if (device.getUser() != null)
@@ -107,12 +104,13 @@ public class DeviceService {
     @Transactional
     public void confirmDeviceActivation(DeviceCredentialsRequest request) {
         Device device = deviceRepository.findByMacAddress(request.macAddress())
-                .orElseThrow(() -> ItemNotFoundException.createForMacAddress(Device.class, request.macAddress()));
+                // Not to reveal whether MAC address exists
+                .orElseThrow(() -> new DeviceUnauthorizedException("Invalid device credentials"));
 
         String incomingHash = CryptoUtils.hashDeviceSecret(request.deviceSecret());
         // Check if device secret is the same
         if (!incomingHash.equalsIgnoreCase(device.getDeviceSecret()))
-            throw new InvalidDeviceSecretException("Invalid device secret");
+            throw new DeviceUnauthorizedException("Invalid device credentials");
 
         // Check if device has user
         if (device.getUser() == null)
