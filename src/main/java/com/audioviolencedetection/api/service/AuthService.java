@@ -92,13 +92,14 @@ public class AuthService {
         Device device = deviceRepository.findByMacAddress(request.macAddress())
                 .orElseThrow(() -> ItemNotFoundException.createForMacAddress(Device.class, request.macAddress()));
 
-        if (device.getUser() == null || !device.getIsActivated())
-            throw new UnprocessableEntityException("Device is disconnected or not activated");
-
         String incomingHash = CryptoUtils.hashDeviceSecret(request.deviceSecret());
         // Check if device secret is the same
         if (!incomingHash.equalsIgnoreCase(device.getDeviceSecret()))
-            throw new InvalidDeviceSecretException("Invalid device secret");
+            throw new InvalidDeviceSecretException("Invalid device credentials");
+
+        // Check if device is connected and activated
+        if (device.getUser() == null || !device.getIsActivated())
+            throw new UnprocessableEntityException("Device is disconnected or not activated");
 
         SecurityDevice securityDevice = new SecurityDevice(device);
         String token = jwtService.generateToken(securityDevice, device.getId(), Device.class.getSimpleName().toLowerCase());
