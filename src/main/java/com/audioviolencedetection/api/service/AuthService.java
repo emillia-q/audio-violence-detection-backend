@@ -10,6 +10,7 @@ import com.audioviolencedetection.api.entity.User;
 import com.audioviolencedetection.api.exception.InvalidDeviceSecretException;
 import com.audioviolencedetection.api.exception.ItemNotFoundException;
 import com.audioviolencedetection.api.exception.ResourceInUseException;
+import com.audioviolencedetection.api.exception.UnprocessableEntityException;
 import com.audioviolencedetection.api.repository.DeviceRepository;
 import com.audioviolencedetection.api.repository.UserRepository;
 import com.audioviolencedetection.api.security.model.SecurityDevice;
@@ -90,6 +91,9 @@ public class AuthService {
     public DeviceLoginResponse authenticateDevice(DeviceCredentialsRequest request) {
         Device device = deviceRepository.findByMacAddress(request.macAddress())
                 .orElseThrow(() -> ItemNotFoundException.createForMacAddress(Device.class, request.macAddress()));
+
+        if (device.getUser() == null || !device.getIsActivated())
+            throw new UnprocessableEntityException("Device is disconnected or not activated");
 
         String incomingHash = CryptoUtils.hashDeviceSecret(request.deviceSecret());
         // Check if device secret is the same
