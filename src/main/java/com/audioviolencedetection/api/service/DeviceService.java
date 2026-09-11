@@ -13,6 +13,7 @@ import com.audioviolencedetection.api.repository.UserRepository;
 import com.audioviolencedetection.api.util.CryptoUtils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,11 +28,13 @@ public class DeviceService {
 
     // User
 
-    public List<DeviceListResponse> getUserDevices(Long userId) {
+    public List<DeviceListResponse> getUserDevices(Long userId, int pageNumber, int pageSize) {
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+
         userRepository.findById(userId)
                 .orElseThrow(() -> ItemNotFoundException.createForId(User.class, userId));
 
-        return deviceRepository.findAllByUserId(userId)
+        return deviceRepository.findAllByUserId(userId, pageRequest)
                 .stream()
                 .map(deviceMapper::toDeviceListResponse)
                 .toList();

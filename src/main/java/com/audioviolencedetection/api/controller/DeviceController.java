@@ -36,8 +36,10 @@ public class DeviceController {
     @ApiResponse(responseCode = "200", description = "Returns a list of all user devices")
     @ApiResponse(responseCode = "204", description = "User has no devices")
     @ApiResponse(responseCode = "404", description = "User not found")
-    public ResponseEntity<List<DeviceListResponse>> getUserDevices(@AuthenticationPrincipal SecurityUser securityUser) {
-        List<DeviceListResponse> devices = deviceService.getUserDevices(securityUser.getId());
+    public ResponseEntity<List<DeviceListResponse>> getUserDevices(@AuthenticationPrincipal SecurityUser securityUser,
+                                                                   @RequestParam(defaultValue = "0") int pageNumber,
+                                                                   @RequestParam(defaultValue = "10") int pageSize) {
+        List<DeviceListResponse> devices = deviceService.getUserDevices(securityUser.getId(), pageNumber, pageSize);
 
         if (devices.isEmpty())
             return ResponseEntity.noContent().build();

@@ -32,7 +32,7 @@ public class AlertController {
     @ApiResponse(responseCode = "204", description = "List of alerts is empty")
     public ResponseEntity<List<AlertListResponse>> getListOfAlerts(@AuthenticationPrincipal SecurityUser securityUser,
                                                                    @RequestParam(defaultValue = "0") int pageNumber,
-                                                                   @RequestParam(defaultValue = "5") int pageSize) {
+                                                                   @RequestParam(defaultValue = "10") int pageSize) {
         List<AlertListResponse> alerts = alertService.getListOfAlerts(securityUser.getId(), pageNumber, pageSize);
 
         if (alerts.isEmpty())

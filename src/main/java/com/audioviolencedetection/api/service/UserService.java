@@ -19,6 +19,7 @@ import com.audioviolencedetection.api.repository.UserRelationshipRepository;
 import com.audioviolencedetection.api.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,8 +34,10 @@ public class UserService {
     private final UserRelationshipMapper userRelationshipMapper;
 
     // Trusted Users
-    public List<TrustedUserListResponse> getListOfTrustedUsers(Long protectedUserId) {
-        return userRelationshipRepository.findTrustedUsersByUserId(protectedUserId).stream()
+    public List<TrustedUserListResponse> getListOfTrustedUsers(Long protectedUserId, int pageNumber, int pageSize) {
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+
+        return userRelationshipRepository.findTrustedUsersByUserId(protectedUserId, pageRequest).stream()
                 .map(userRelationshipMapper::toTrustedUserListResponse)
                 .toList();
     }
@@ -109,8 +112,10 @@ public class UserService {
     }
 
     // Protected Users
-    public List<ProtectedUserListResponse> getListOfProtectedUsers(Long trustedUserId) {
-        return userRelationshipRepository.findProtectedUsersByUserId(trustedUserId).stream()
+    public List<ProtectedUserListResponse> getListOfProtectedUsers(Long trustedUserId, int pageNumber, int pageSize) {
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+
+        return userRelationshipRepository.findProtectedUsersByUserId(trustedUserId, pageRequest).stream()
                 .map(userRelationshipMapper::toProtectedUserListResponse)
                 .toList();
     }

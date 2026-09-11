@@ -4,6 +4,7 @@ import com.audioviolencedetection.api.entity.UserRelationship;
 import com.audioviolencedetection.api.entity.UserRelationshipId;
 import com.audioviolencedetection.api.repository.projection.ProtectedUserListProjection;
 import com.audioviolencedetection.api.repository.projection.TrustedUserListProjection;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -21,7 +22,7 @@ public interface UserRelationshipRepository extends JpaRepository<UserRelationsh
             "end as trustedUserDisplayName " +
             "from UserRelationship r " +
             "where r.user.id = :userId")
-    List<TrustedUserListProjection> findTrustedUsersByUserId(Long userId);
+    List<TrustedUserListProjection> findTrustedUsersByUserId(Long userId, Pageable pageable);
 
     @Query("select r.user.id as protectedUserId, " +
             "case " +
@@ -31,5 +32,5 @@ public interface UserRelationshipRepository extends JpaRepository<UserRelationsh
             "end as protectedUserDisplayName " +
             "from UserRelationship r " +
             "where r.trustedUser.id = :userId")
-    List<ProtectedUserListProjection> findProtectedUsersByUserId(Long userId);
+    List<ProtectedUserListProjection> findProtectedUsersByUserId(Long userId, Pageable pageable);
 }
