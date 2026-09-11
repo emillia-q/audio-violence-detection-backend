@@ -1,6 +1,7 @@
 package com.audioviolencedetection.api.repository;
 
 import com.audioviolencedetection.api.entity.Device;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -11,5 +12,5 @@ import java.util.Optional;
 public interface DeviceRepository extends JpaRepository<Device, Long> {
 
     Optional<Device> findByMacAddress(String macAddress);
-    List<Device> findAllByUserId(Long userId);
+    List<Device> findAllByUserId(Long userId, Pageable pageable);
 }
