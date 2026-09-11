@@ -35,8 +35,10 @@ public class UserController {
     @Operation(summary = "Get list of trusted users for user")
     @ApiResponse(responseCode = "200", description = "Return trusted users list")
     @ApiResponse(responseCode = "204", description = "No trusted user assigned to this account")
-    public ResponseEntity<List<TrustedUserListResponse>> getListOfTrustedUsers(@AuthenticationPrincipal SecurityUser securityUser) {
-        List<TrustedUserListResponse> trustedUsers = userService.getListOfTrustedUsers(securityUser.getId());
+    public ResponseEntity<List<TrustedUserListResponse>> getListOfTrustedUsers(@AuthenticationPrincipal SecurityUser securityUser,
+                                                                               @RequestParam(defaultValue = "0") int pageNumber,
+                                                                               @RequestParam(defaultValue = "10") int pageSize) {
+        List<TrustedUserListResponse> trustedUsers = userService.getListOfTrustedUsers(securityUser.getId(), pageNumber, pageSize);
 
         if (trustedUsers.isEmpty())
             return ResponseEntity.noContent().build();
@@ -92,8 +94,10 @@ public class UserController {
     @Operation(summary = "Get list of protected users for user")
     @ApiResponse(responseCode = "200", description = "Return protected users list")
     @ApiResponse(responseCode = "204", description = "No protected user assigned to this account")
-    public ResponseEntity<List<ProtectedUserListResponse>> getListOfProtectedUsers(@AuthenticationPrincipal SecurityUser securityUser) {
-        List<ProtectedUserListResponse> protectedUsers = userService.getListOfProtectedUsers(securityUser.getId());
+    public ResponseEntity<List<ProtectedUserListResponse>> getListOfProtectedUsers(@AuthenticationPrincipal SecurityUser securityUser,
+                                                                                   @RequestParam(defaultValue = "0") int pageNumber,
+                                                                                   @RequestParam(defaultValue = "10") int pageSize) {
+        List<ProtectedUserListResponse> protectedUsers = userService.getListOfProtectedUsers(securityUser.getId(), pageNumber, pageSize);
 
         if (protectedUsers.isEmpty())
             return ResponseEntity.noContent().build();

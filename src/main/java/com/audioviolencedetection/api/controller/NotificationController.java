@@ -31,7 +31,7 @@ public class NotificationController {
     public ResponseEntity<List<NotificationListResponse>> getProtectedUsersNotifications(
             @AuthenticationPrincipal SecurityUser securityUser,
             @RequestParam(defaultValue = "0") int pageNumber,
-            @RequestParam(defaultValue = "5") int pageSize) {
+            @RequestParam(defaultValue = "10") int pageSize) {
         List<NotificationListResponse> notifications = notificationService.getProtectedUsersNotifications(securityUser.getId(), pageNumber, pageSize);
 
         if (notifications.isEmpty())
