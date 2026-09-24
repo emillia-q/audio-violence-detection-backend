@@ -1,7 +1,5 @@
 package com.audioviolencedetection.api.security.filter;
 
-import com.audioviolencedetection.api.repository.DeviceRepository;
-import com.audioviolencedetection.api.security.model.SecurityDevice;
 import com.audioviolencedetection.api.security.service.CustomDeviceDetailsService;
 import com.audioviolencedetection.api.security.service.JwtService;
 import io.jsonwebtoken.JwtException;
