@@ -3,7 +3,9 @@ package com.audioviolencedetection.api.service;
 import com.audioviolencedetection.api.dto.request.AddTrustedUserRequest;
 import com.audioviolencedetection.api.entity.User;
 import com.audioviolencedetection.api.entity.UserRelationship;
+import com.audioviolencedetection.api.entity.UserRelationshipId;
 import com.audioviolencedetection.api.exception.BadRequestException;
+import com.audioviolencedetection.api.exception.ResourceInUseException;
 import com.audioviolencedetection.api.repository.NotificationRepository;
 import com.audioviolencedetection.api.repository.UserRelationshipRepository;
 import com.audioviolencedetection.api.repository.UserRepository;
@@ -58,6 +60,30 @@ public class UserServiceTest {
         assertThrows(BadRequestException.class, () -> userService.addTrustedUser(request, PROTECTED_USER_ID));
 
         verify(userRelationshipRepository, never()).existsById(any());
+        verify(userRelationshipRepository, never()).save(any());
+    }
+
+    @Test
+    void addTrustedUser_ShouldThrowResourceInUseException_WhenRelationshipAlreadyExists() {
+        // GIVEN
+        AddTrustedUserRequest request = new AddTrustedUserRequest(TRUSTED_USER_EMAIL, "My Guardian");
+
+        // Create users and their relationship
+        User protectedUser = new User();
+        protectedUser.setEmail(PROTECTED_USER_EMAIL);
+        protectedUser.setId(PROTECTED_USER_ID);
+        User trustedUser = new User();
+        trustedUser.setId(TRUSTED_USER_ID);
+
+        UserRelationshipId relationshipId = new UserRelationshipId(PROTECTED_USER_ID, TRUSTED_USER_ID);
+
+        when(userRepository.findById(PROTECTED_USER_ID)).thenReturn(Optional.of(protectedUser));
+        when(userRepository.findByEmail(TRUSTED_USER_EMAIL)).thenReturn(Optional.of(trustedUser));
+        when(userRelationshipRepository.existsById(relationshipId)).thenReturn(true);
+
+        // WHEN & THEN
+        assertThrows(ResourceInUseException.class, () -> userService.addTrustedUser(request, PROTECTED_USER_ID));
+
         verify(userRelationshipRepository, never()).save(any());
     }
 }
