@@ -14,6 +14,7 @@ import com.audioviolencedetection.api.util.CryptoUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -144,6 +145,30 @@ public class DeviceServiceTest {
         user.setId(USER_ID);
         when(userRepository.findById(USER_ID)).thenReturn(Optional.of(user));
         when(deviceRepository.findById(DEVICE_ID)).thenReturn(Optional.empty());
+
+        // WHEN & THEN
+        assertThrows(ItemNotFoundException.class, () -> deviceService.disconnectDevice(USER_ID, DEVICE_ID));
+    }
+
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(longs = {2L})
+    void disconnectDevice_ShouldThrowItemNotFoundException_WhenDeviceIsNotAssignedToRequestingUser(Long assignedUserId) {
+        // GIVEN
+        User requestingUser = new User();
+        requestingUser.setId(USER_ID);
+        Device device = createValidDevice();
+
+        if (assignedUserId != null) {
+            User otherUser = new User();
+            otherUser.setId(assignedUserId);
+            device.setUser(otherUser);
+        } else {
+            device.setUser(null);
+        }
+
+        when(userRepository.findById(USER_ID)).thenReturn(Optional.of(requestingUser));
+        when(deviceRepository.findById(DEVICE_ID)).thenReturn(Optional.of(device));
 
         // WHEN & THEN
         assertThrows(ItemNotFoundException.class, () -> deviceService.disconnectDevice(USER_ID, DEVICE_ID));
