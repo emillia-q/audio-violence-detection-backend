@@ -137,6 +137,18 @@ public class DeviceServiceTest {
         verify(deviceRepository, never()).findById(anyLong());
     }
 
+    @Test
+    void disconnectDevice_ShouldThrowItemNotFoundException_WhenDeviceDoesNotExist() {
+        // GIVEN
+        User user = new User();
+        user.setId(USER_ID);
+        when(userRepository.findById(USER_ID)).thenReturn(Optional.of(user));
+        when(deviceRepository.findById(DEVICE_ID)).thenReturn(Optional.empty());
+
+        // WHEN & THEN
+        assertThrows(ItemNotFoundException.class, () -> deviceService.disconnectDevice(USER_ID, DEVICE_ID));
+    }
+
     private Device createValidDevice() {
         Device device = new Device();
         device.setDeviceSecret(CryptoUtils.hashDeviceSecret(DEVICE_SECRET));
