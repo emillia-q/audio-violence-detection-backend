@@ -7,7 +7,6 @@ import com.audioviolencedetection.api.entity.UserRelationship;
 import com.audioviolencedetection.api.entity.UserRelationshipId;
 import com.audioviolencedetection.api.exception.BadRequestException;
 import com.audioviolencedetection.api.exception.ResourceInUseException;
-import com.audioviolencedetection.api.repository.NotificationRepository;
 import com.audioviolencedetection.api.repository.UserRelationshipRepository;
 import com.audioviolencedetection.api.repository.UserRepository;
 import org.junit.jupiter.api.Test;
@@ -36,9 +35,6 @@ public class UserServiceTest {
 
     @Mock
     private UserRelationshipRepository userRelationshipRepository;
-
-    @Mock
-    private NotificationRepository notificationRepository;
 
     @InjectMocks
     private UserService userService;
