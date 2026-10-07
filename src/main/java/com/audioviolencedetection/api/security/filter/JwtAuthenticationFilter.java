@@ -1,7 +1,6 @@
 package com.audioviolencedetection.api.security.filter;
 
-import com.audioviolencedetection.api.entity.Device;
-import com.audioviolencedetection.api.security.model.SecurityDevice;
+import com.audioviolencedetection.api.security.service.CustomDeviceDetailsService;
 import com.audioviolencedetection.api.security.service.JwtService;
 import io.jsonwebtoken.JwtException;
 import jakarta.annotation.Nonnull;
@@ -25,6 +24,7 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
+    private final CustomDeviceDetailsService deviceDetailsService;
 
     @Override
     protected void doFilterInternal(
@@ -46,12 +46,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 if ("device".equals(userType)) {
                     Long deviceId = jwtService.extractDeviceId(token);
 
-                    Device device = Device.builder()
-                            .id(deviceId)
-                            .macAddress(userName)
-                            .isActivated(true)
-                            .build();
-                    userDetails = new SecurityDevice(device);
+                    userDetails = deviceDetailsService.loadDeviceById(deviceId);
                 } else {
                     // Load user data by extracting it from the database via userName
                     userDetails = this.userDetailsService.loadUserByUsername(userName);
