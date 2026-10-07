@@ -5,6 +5,7 @@ import com.audioviolencedetection.api.dto.response.DeviceDetailsResponse;
 import com.audioviolencedetection.api.entity.Device;
 import com.audioviolencedetection.api.entity.User;
 import com.audioviolencedetection.api.exception.InvalidDeviceCredentialsException;
+import com.audioviolencedetection.api.exception.ItemNotFoundException;
 import com.audioviolencedetection.api.exception.ResourceInUseException;
 import com.audioviolencedetection.api.mapper.DeviceMapper;
 import com.audioviolencedetection.api.repository.DeviceRepository;
@@ -27,6 +28,7 @@ import static org.mockito.Mockito.*;
 public class DeviceServiceTest {
 
     private static final Long USER_ID = 1L;
+    private static final Long DEVICE_ID = 1L;
     private static final String MAC_ADDRESS = "AA:BB:CC:DD:EE:FF";
     private static final String DEVICE_SECRET = "totalnietajnysekreturzadzenia123";
 
@@ -96,7 +98,7 @@ public class DeviceServiceTest {
         // GIVEN
         DeviceCredentialsRequest request = new DeviceCredentialsRequest(MAC_ADDRESS, DEVICE_SECRET);
         DeviceDetailsResponse response = new DeviceDetailsResponse(
-                1L,
+                DEVICE_ID,
                 MAC_ADDRESS,
                 "Room",
                 false
@@ -122,6 +124,17 @@ public class DeviceServiceTest {
 
         verify(userRepository, times(1)).findById(USER_ID);
         verify(deviceMapper, times(1)).toDeviceDetailsResponse(device);
+    }
+
+    @Test
+    void disconnectDevice_ShouldThrowItemNotFoundException_WhenUserDoesNotExist() {
+        // GIVEN
+        when(userRepository.findById(USER_ID)).thenReturn(Optional.empty());
+
+        // WHEN & THEN
+        assertThrows(ItemNotFoundException.class, () -> deviceService.disconnectDevice(USER_ID, DEVICE_ID));
+
+        verify(deviceRepository, never()).findById(anyLong());
     }
 
     private Device createValidDevice() {
