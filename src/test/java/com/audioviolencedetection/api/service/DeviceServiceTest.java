@@ -3,6 +3,7 @@ package com.audioviolencedetection.api.service;
 import com.audioviolencedetection.api.dto.request.DeviceCredentialsRequest;
 import com.audioviolencedetection.api.entity.Device;
 import com.audioviolencedetection.api.entity.User;
+import com.audioviolencedetection.api.exception.InvalidDeviceCredentialsException;
 import com.audioviolencedetection.api.exception.ResourceInUseException;
 import com.audioviolencedetection.api.mapper.DeviceMapper;
 import com.audioviolencedetection.api.repository.DeviceRepository;
@@ -10,6 +11,8 @@ import com.audioviolencedetection.api.repository.UserRepository;
 import com.audioviolencedetection.api.util.CryptoUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -38,6 +41,21 @@ public class DeviceServiceTest {
     @InjectMocks
     private DeviceService deviceService;
 
+    @ParameterizedTest
+    @ValueSource(strings = {"zlysekret", "2093648", "ak7wo3me1rk2", ""})
+    void pairDevice_ShouldThrowInvalidDeviceCredentialsException_WhenSecretIsWrong(String wrongSecret) {
+        // GIVEN
+        DeviceCredentialsRequest request = new DeviceCredentialsRequest(MAC_ADDRESS, wrongSecret);
+        Device device = createValidDevice();
+
+        when(deviceRepository.findByMacAddress(MAC_ADDRESS)).thenReturn(Optional.of(device));
+
+        // WHEN & THEN
+        assertThrows(InvalidDeviceCredentialsException.class, () -> deviceService.pairDevice(USER_ID, request));
+
+        verify(userRepository, never()).findById(anyLong());
+    }
+
     @Test
     void pairDevice_ShouldThrowResourceInUseException_WhenDeviceAlreadyHasUser() {
         // GIVEN
@@ -49,9 +67,8 @@ public class DeviceServiceTest {
         when(deviceRepository.findByMacAddress(MAC_ADDRESS)).thenReturn(Optional.of(device));
 
         // WHEN & THEN
-        assertThrows(ResourceInUseException.class, () -> {
-            deviceService.pairDevice(USER_ID, request);
-        }, "Expected ResourceInUseException, because the device was already paired with a user");
+        assertThrows(ResourceInUseException.class, () -> deviceService.pairDevice(USER_ID, request),
+                "Expected ResourceInUseException, because the device was already paired with a user");
 
         verify(userRepository, never()).findById(anyLong());
     }
