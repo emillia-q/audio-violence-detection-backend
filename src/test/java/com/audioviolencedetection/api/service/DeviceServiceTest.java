@@ -41,6 +41,21 @@ public class DeviceServiceTest {
     @InjectMocks
     private DeviceService deviceService;
 
+    @Test
+    void pairDevice_ShouldThrowInvalidDeviceCredentialsException_WhenDeviceIsNotInDatabase() {
+        // GIVEN
+        DeviceCredentialsRequest request = new DeviceCredentialsRequest(MAC_ADDRESS, DEVICE_SECRET);
+
+        // No device with this mac address in db
+        when(deviceRepository.findByMacAddress(MAC_ADDRESS)).thenReturn(Optional.empty());
+
+        // WHEN & THEN
+        assertThrows(InvalidDeviceCredentialsException.class, () -> deviceService.pairDevice(USER_ID, request));
+
+        verify(userRepository, never()).findById(anyLong());
+        verify(deviceMapper, never()).toDeviceDetailsResponse(any());
+    }
+
     @ParameterizedTest
     @ValueSource(strings = {"zlysekret", "2093648", "ak7wo3me1rk2", ""})
     void pairDevice_ShouldThrowInvalidDeviceCredentialsException_WhenSecretIsWrong(String wrongSecret) {
@@ -54,6 +69,7 @@ public class DeviceServiceTest {
         assertThrows(InvalidDeviceCredentialsException.class, () -> deviceService.pairDevice(USER_ID, request));
 
         verify(userRepository, never()).findById(anyLong());
+        verify(deviceMapper, never()).toDeviceDetailsResponse(any());
     }
 
     @Test
@@ -71,6 +87,7 @@ public class DeviceServiceTest {
                 "Expected ResourceInUseException, because the device was already paired with a user");
 
         verify(userRepository, never()).findById(anyLong());
+        verify(deviceMapper, never()).toDeviceDetailsResponse(any());
     }
 
     private Device createValidDevice() {
