@@ -1,6 +1,7 @@
 package com.audioviolencedetection.api.service;
 
 import com.audioviolencedetection.api.dto.request.DeviceCredentialsRequest;
+import com.audioviolencedetection.api.dto.response.DeviceDetailsResponse;
 import com.audioviolencedetection.api.entity.Device;
 import com.audioviolencedetection.api.entity.User;
 import com.audioviolencedetection.api.exception.InvalidDeviceCredentialsException;
@@ -88,6 +89,39 @@ public class DeviceServiceTest {
 
         verify(userRepository, never()).findById(anyLong());
         verify(deviceMapper, never()).toDeviceDetailsResponse(any());
+    }
+
+    @Test
+    void pairDevice_ShouldPairSuccessfully_WhenDataIsValid() {
+        // GIVEN
+        DeviceCredentialsRequest request = new DeviceCredentialsRequest(MAC_ADDRESS, DEVICE_SECRET);
+        DeviceDetailsResponse response = new DeviceDetailsResponse(
+                1L,
+                MAC_ADDRESS,
+                "Room",
+                false
+        );
+
+        Device device = createValidDevice();
+        device.setUser(null);
+
+        User user = new User();
+        user.setId(USER_ID);
+
+        when(deviceRepository.findByMacAddress(MAC_ADDRESS)).thenReturn(Optional.of(device));
+        when(userRepository.findById(USER_ID)).thenReturn(Optional.of(user));
+        when(deviceMapper.toDeviceDetailsResponse(device)).thenReturn(response);
+
+        // WHEN
+        DeviceDetailsResponse actualResponse = deviceService.pairDevice(USER_ID, request);
+
+        // THEN
+        assertNotNull(actualResponse);
+        assertEquals(response, actualResponse);
+        assertEquals(user, device.getUser(), "User should be assigned to a device");
+
+        verify(userRepository, times(1)).findById(USER_ID);
+        verify(deviceMapper, times(1)).toDeviceDetailsResponse(device);
     }
 
     private Device createValidDevice() {
