@@ -174,6 +174,26 @@ public class DeviceServiceTest {
         assertThrows(ItemNotFoundException.class, () -> deviceService.disconnectDevice(USER_ID, DEVICE_ID));
     }
 
+    @Test
+    void disconnectDevice_ShouldDisconnectSuccessfully_WhenUserIsOwner() {
+        // GIVEN
+        User user = new User();
+        user.setId(USER_ID);
+        Device device = createValidDevice();
+        device.setUser(user);
+
+        when(userRepository.findById(USER_ID)).thenReturn(Optional.of(user));
+        when(deviceRepository.findById(DEVICE_ID)).thenReturn(Optional.of(device));
+
+        // WHEN
+        deviceService.disconnectDevice(USER_ID, DEVICE_ID);
+
+        // THEN
+        assertNull(device.getUser(), "User should be set as null");
+        assertNull(device.getName(), "Device name should be removed");
+        assertFalse(device.getIsActivated(), "Device should be deactivated");
+    }
+
     private Device createValidDevice() {
         Device device = new Device();
         device.setDeviceSecret(CryptoUtils.hashDeviceSecret(DEVICE_SECRET));
