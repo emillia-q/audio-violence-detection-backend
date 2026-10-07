@@ -22,6 +22,10 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class DeviceServiceTest {
 
+    private static final Long USER_ID = 1L;
+    private static final String MAC_ADDRESS = "AA:BB:CC:DD:EE:FF";
+    private static final String DEVICE_SECRET = "totalnietajnysekreturzadzenia123";
+
     @Mock
     private DeviceRepository deviceRepository;
 
@@ -37,21 +41,24 @@ public class DeviceServiceTest {
     @Test
     void pairDevice_ShouldThrowResourceInUseException_WhenDeviceAlreadyHasUser() {
         // GIVEN
-        Long userId = 1L;
-        String macAddress = "AA:BB:CC:DD:EE:FF";
-        String deviceSecret = "totalnietajnysekreturzadzenia123";
-        DeviceCredentialsRequest request = new DeviceCredentialsRequest(macAddress, deviceSecret);
-        Device device = new Device();
-        device.setDeviceSecret(CryptoUtils.hashDeviceSecret(deviceSecret));
+        DeviceCredentialsRequest request = new DeviceCredentialsRequest(MAC_ADDRESS, DEVICE_SECRET);
+
+        Device device = createValidDevice();
         device.setUser(new User()); // User assigned
 
-        when(deviceRepository.findByMacAddress(macAddress)).thenReturn(Optional.of(device));
+        when(deviceRepository.findByMacAddress(MAC_ADDRESS)).thenReturn(Optional.of(device));
 
         // WHEN & THEN
         assertThrows(ResourceInUseException.class, () -> {
-            deviceService.pairDevice(userId, request);
+            deviceService.pairDevice(USER_ID, request);
         }, "Expected ResourceInUseException, because the device was already paired with a user");
 
         verify(userRepository, never()).findById(anyLong());
+    }
+
+    private Device createValidDevice() {
+        Device device = new Device();
+        device.setDeviceSecret(CryptoUtils.hashDeviceSecret(DEVICE_SECRET));
+        return device;
     }
 }
