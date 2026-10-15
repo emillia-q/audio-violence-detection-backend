@@ -33,7 +33,7 @@ public class AuthController {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    @Operation(summary = "Registers a new user account in the system")
+    @Operation(summary = "Register a new user account in the system")
     @ApiResponse(responseCode = "201", description = "User successfully registered")
     @ApiResponse(responseCode = "400", description = "Invalid request data or validation failed")
     @ApiResponse(responseCode = "409", description = "Email address is already taken")

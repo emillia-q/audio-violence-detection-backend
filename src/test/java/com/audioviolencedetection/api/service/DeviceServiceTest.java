@@ -61,7 +61,7 @@ public class DeviceServiceTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"zlysekret", "2093648", "ak7wo3me1rk2", ""})
+    @ValueSource(strings = {"pass123", "6b6f745f726576696577", ""})
     void pairDevice_ShouldThrowInvalidDeviceCredentialsException_WhenSecretIsWrong(String wrongSecret) {
         // GIVEN
         DeviceCredentialsRequest request = new DeviceCredentialsRequest(MAC_ADDRESS, wrongSecret);
