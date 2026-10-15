@@ -7,6 +7,7 @@
   <a href="https://www.liquibase.com/"><img src="https://img.shields.io/badge/Liquibase-Database_migrations-2962FF?style=for-the-badge&logo=liquibase&logoColor=white" alt="Liquibase"></a>
   <a href="https://www.docker.com/"><img src="https://img.shields.io/badge/Docker-Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker Compose"></a>
   <a href="https://swagger.io/"><img src="https://img.shields.io/badge/OpenAPI-Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=black" alt="OpenAPI / Swagger"></a>
+  <a href="https://junit.org/junit5/"><img src="https://img.shields.io/badge/JUnit-5-25A162?style=for-the-badge&logo=junit5&logoColor=white" alt="JUnit 5"></a>
 </p>
 
 
@@ -72,6 +73,11 @@ The API is documented with Swagger UI and includes JWT Bearer authentication sup
   reducing memory footprint.
 * **Standardized Exception Handling:** A global `@RestControllerAdvice` layer sanitizes errors, hiding internal
   implementation details while returning consistent API responses.
+
+## 🧪 Testing
+
+The business logic is tested with **JUnit 5** and **Mockito**. Unit tests use mocks to isolate services and verify
+their behavior and interactions with dependencies.
 
 ## 👩‍💻 Author
 
