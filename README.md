@@ -36,7 +36,7 @@ This repository is the backend part of the four-component system. The remaining 
 
 ## 🔄 System flow
 
-![System flow](assets/system_flow.png)
+![System flow](assets/architecture.jpg)
 
 ## 📱 API preview
 
