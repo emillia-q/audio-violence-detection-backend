@@ -9,9 +9,6 @@
   <a href="https://swagger.io/"><img src="https://img.shields.io/badge/OpenAPI-Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=black" alt="OpenAPI / Swagger"></a>
 </p>
 
-> [!IMPORTANT]
-> **Project in active development.** The core REST API, authentication, device provisioning and alert flow are
-> implemented. Planned work includes Kafka-based event processing and IoT communication over MQTT.
 
 ## 🧩 Engineering thesis project
 
@@ -32,9 +29,9 @@ This repository is the backend part of the four-component system. The remaining 
 | Repository                                                                               | Role                                                        |
 |------------------------------------------------------------------------------------------|-------------------------------------------------------------|
 | [Backend API](https://github.com/emillia-q/audio-violence-detection-backend)             | Secure API, device lifecycle, alerts and user relationships |
-| [TinyML model](https://github.com/emillia-q/audio-violence-detection-tinyml)             | On-device audio violence classification                     |
-| [IoT hardware](https://github.com/emillia-q/audio-violence-detection-hardware)           | Edge device that runs the model and sends alerts            |
 | [React Native application](https://github.com/emillia-q/audio-violence-detection-mobile) | Mobile experience for protected and trusted users           |
+| [IoT hardware](https://github.com/emillia-q/audio-violence-detection-hardware)           | Edge device that runs the model and sends alerts            |
+| TinyML model             | On-device audio violence classification                     |
 
 ## 🔄 System flow
 
