@@ -1,7 +1,6 @@
 package com.audioviolencedetection.api.controller;
 
 import com.audioviolencedetection.api.dto.request.DeviceCredentialsRequest;
-import com.audioviolencedetection.api.dto.request.DeviceCredentialsRequest;
 import com.audioviolencedetection.api.dto.request.UpdateDeviceNameRequest;
 import com.audioviolencedetection.api.dto.response.DeviceDetailsResponse;
 import com.audioviolencedetection.api.dto.response.DeviceListResponse;
